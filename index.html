@@ -282,8 +282,6 @@
                 </div>
             </div>
         </section>
-
-        <!-- (Todas as outras seções do seu site seguem intactas abaixo) -->
         
         <!-- 3. 🎮 QUIZ -->
         <section class="page" id="quiz">
@@ -987,50 +985,120 @@
             for (let i = 0; i < 3; i++) bbTrayPieces[i] = JSON.parse(JSON.stringify(SHAPES[Math.floor(Math.random() * SHAPES.length)].grid));
             renderBbTray();
         }
+
+        // ==========================================
+        // CÓDIGO CORRIGIDO DO ARRASTAR E SOLTAR
+        // ==========================================
         function renderBbTray() {
             const t = document.getElementById("blockTray"); t.innerHTML = "";
             bbTrayPieces.forEach((grid, idx) => {
-                const slot = document.createElement("div"); slot.className = "flex items-center justify-center p-1 cursor-grab active:cursor-grabbing hover:bg-rose-100/40 rounded-xl transition-all h-[80px]"; slot.dataset.idx = idx;
+                const slot = document.createElement("div"); 
+                slot.className = "flex items-center justify-center p-1 cursor-grab active:cursor-grabbing hover:bg-rose-100/40 rounded-xl transition-all h-[80px] touch-none"; 
+                slot.dataset.idx = idx;
+                
                 if (grid) {
-                    const c = document.createElement("div"); c.className = "grid gap-1"; c.style.gridTemplateRows = `repeat(${grid.length}, minmax(0, 1fr))`; c.style.gridTemplateColumns = `repeat(${grid[0].length}, minmax(0, 1fr))`;
+                    const c = document.createElement("div"); 
+                    c.className = "grid gap-1 pointer-events-none"; 
+                    c.style.gridTemplateRows = `repeat(${grid.length}, minmax(0, 1fr))`; 
+                    c.style.gridTemplateColumns = `repeat(${grid[0].length}, minmax(0, 1fr))`;
+                    
                     grid.forEach(row => row.forEach(val => {
-                        const b = document.createElement("div"); b.className = `w-5 h-5 rounded-md ${val ? 'bg-gradient-to-tr from-rose-500 to-pink-500 shadow-sm border border-white/60' : 'opacity-0'}`; c.appendChild(b);
+                        const b = document.createElement("div"); 
+                        b.className = `w-5 h-5 rounded-md ${val ? 'bg-gradient-to-tr from-rose-500 to-pink-500 shadow-sm border border-white/60' : 'opacity-0'}`; 
+                        c.appendChild(b);
                     }));
                     slot.appendChild(c); attachBbDrag(slot, idx);
                 } else slot.classList.add("opacity-20", "pointer-events-none");
                 t.appendChild(slot);
             });
         }
+
         function attachBbDrag(slot, idx) {
             const start = (e) => {
-                if (!bbGameActive || !bbTrayPieces[idx]) return; bbDraggingIdx = idx;
-                const g = document.getElementById("dragGhost"); g.innerHTML = ""; g.style.display = "block";
-                const c = slot.children[0].cloneNode(true); c.querySelectorAll("div").forEach(d => { if(d.classList.contains("w-5")){ d.classList.replace("w-5","w-7"); d.classList.replace("h-5","h-7"); }});
-                g.appendChild(c); moveBbDrag(e);
+                if (!bbGameActive || !bbTrayPieces[idx]) return; 
+                bbDraggingIdx = idx;
+                const g = document.getElementById("dragGhost"); 
+                g.innerHTML = ""; g.style.display = "block";
+                const c = slot.children[0].cloneNode(true); 
+                c.querySelectorAll("div").forEach(d => { 
+                    if(d.classList.contains("w-5")){ 
+                        d.classList.replace("w-5","w-7"); 
+                        d.classList.replace("h-5","h-7"); 
+                    }
+                });
+                g.appendChild(c); 
+                moveBbDrag(e);
             };
             slot.addEventListener("pointerdown", start);
         }
+
         function moveBbDrag(e) {
             if (bbDraggingIdx === null || !bbGameActive) return;
-            let cx = e.clientX, cy = e.clientY; if (e.touches) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; }
-            const g = document.getElementById("dragGhost"); g.style.left = cx + "px"; g.style.top = (cy - 45) + "px";
+            let cx = e.clientX, cy = e.clientY; 
+            if (e.touches && e.touches.length > 0) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; }
+            
+            const g = document.getElementById("dragGhost"); 
+            g.style.left = cx + "px"; 
+            g.style.top = (cy - 60) + "px"; 
         }
+
         function endBbDrag(e) {
             if (bbDraggingIdx === null || !bbGameActive) return;
-            document.getElementById("dragGhost").style.display = "none";
-            let cx = e.clientX, cy = e.clientY; if (e.changedTouches) { cx = e.changedTouches[0].clientX; cy = e.changedTouches[0].clientY; }
-            const target = document.elementFromPoint(cx, cy - 45);
+            
+            const ghost = document.getElementById("dragGhost");
+            const grid = bbTrayPieces[bbDraggingIdx];
+            
+            const allBlocks = ghost.querySelectorAll("div > div");
+            let firstDOM = null, firstR = 0, firstC = 0, i = 0;
+            
+            outer: for(let r = 0; r < grid.length; r++) {
+                for(let c = 0; c < grid[0].length; c++) {
+                    if(grid[r][c]) { 
+                        firstDOM = allBlocks[i]; firstR = r; firstC = c; 
+                        break outer; 
+                    }
+                    i++;
+                }
+            }
+            
+            let target = null;
+            if (firstDOM) {
+                const rect = firstDOM.getBoundingClientRect();
+                const blockCenterX = rect.left + (rect.width / 2);
+                const blockCenterY = rect.top + (rect.height / 2);
+                
+                ghost.style.display = "none"; 
+                target = document.elementFromPoint(blockCenterX, blockCenterY);
+            } else {
+                ghost.style.display = "none";
+            }
+            
             if (target && target.classList.contains("block-cell")) {
-                const r = parseInt(target.dataset.r), c = parseInt(target.dataset.c), grid = bbTrayPieces[bbDraggingIdx];
-                if (canPlaceBb(grid, r, c)) { placeBb(grid, r, c); bbTrayPieces[bbDraggingIdx] = null; renderBbTray(); checkBbLines(); if (bbTrayPieces.every(p => p === null)) generateBbTray(); }
+                const hitR = parseInt(target.dataset.r);
+                const hitC = parseInt(target.dataset.c);
+                
+                const shapeTopLeftR = hitR - firstR;
+                const shapeTopLeftC = hitC - firstC;
+                
+                if (canPlaceBb(grid, shapeTopLeftR, shapeTopLeftC)) { 
+                    placeBb(grid, shapeTopLeftR, shapeTopLeftC); 
+                    bbTrayPieces[bbDraggingIdx] = null; 
+                    renderBbTray(); 
+                    checkBbLines(); 
+                    if (bbTrayPieces.every(p => p === null)) generateBbTray(); 
+                }
             }
             bbDraggingIdx = null;
         }
-        window.addEventListener("pointermove", moveBbDrag); window.addEventListener("pointerup", endBbDrag); window.addEventListener("touchend", endBbDrag);
+
+        window.addEventListener("pointermove", moveBbDrag); 
+        window.addEventListener("pointerup", endBbDrag); 
+        window.addEventListener("touchend", endBbDrag);
+        // ==========================================
 
         function canPlaceBb(grid, sr, sc) {
             for (let r = 0; r < grid.length; r++) for (let c = 0; c < grid[0].length; c++) {
-                if (grid[r][c] && (sr + r >= BOARD_SIZE || sc + c >= BOARD_SIZE || bbBoard[sr + r][sc + c] === 1)) return false;
+                if (grid[r][c] && (sr + r >= BOARD_SIZE || sr + r < 0 || sc + c >= BOARD_SIZE || sc + c < 0 || bbBoard[sr + r][sc + c] === 1)) return false;
             }
             return true;
         }
