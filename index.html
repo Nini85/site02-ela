@@ -1,1149 +1,264 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nosso Amor 💖</title>
-
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
-    
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Biblioteca para gerar PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-    <style>
-        :root {
-            --primary: #c9184a;
-            --primary-dark: #800f2f;
-            --secondary: #ff758f;
-            --accent: #ffb3c6;
-            --bg1: #ffe5ec;
-            --bg2: #fff0f3;
-            --glass-bg: rgba(255, 255, 255, 0.88);
-            --glass-border: rgba(255, 255, 255, 0.95);
-        }
-
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #fff0f3 0%, #ffccd5 50%, #ffe5ec 100%);
-            background-attachment: fixed;
-            min-height: 100vh;
-            color: #590d22;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        h1, h2, h3, .font-serif { font-family: 'Playfair Display', serif; }
-        .font-cursive { font-family: 'Dancing Script', cursive; }
-
-        /* Glassmorphism styling */
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 15px 35px -5px rgba(201, 24, 74, 0.12), 0 5px 15px rgba(0, 0, 0, 0.04);
-        }
-
-        .glass-input {
-            background: rgba(255, 255, 255, 0.95);
-            border: 2px solid rgba(255, 182, 193, 0.8);
-            backdrop-filter: blur(8px);
-            transition: all 0.3s ease;
-        }
-        .glass-input:focus { outline: none; border-color: #c9184a; box-shadow: 0 0 15px rgba(201, 24, 74, 0.3); }
-
-        /* Ambient glows */
-        .ambient-light { position: fixed; border-radius: 50%; filter: blur(80px); z-index: 0; pointer-events: none; opacity: 0.5; }
-
-        /* Page transition effects */
-        .page { display: none; opacity: 0; transform: translateY(15px) scale(0.98); transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        .page.active { display: block; opacity: 1; transform: translateY(0) scale(1); }
-
-        /* Romantic Button Styling */
-        .btn-romantic {
-            background: linear-gradient(135deg, #ff4d6d 0%, #c9184a 100%);
-            box-shadow: 0 10px 20px -5px rgba(201, 24, 74, 0.4);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .btn-romantic:hover, .btn-romantic:active { transform: translateY(-2px) scale(1.02); box-shadow: 0 14px 25px -4px rgba(201, 24, 74, 0.5); }
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.92); color: #a4133c; border: 1px solid rgba(255, 143, 171, 0.6);
-            backdrop-filter: blur(6px); transition: all 0.3s ease;
-        }
-        .btn-secondary:hover, .btn-secondary:active { background: #ffffff; color: #c9184a; transform: translateY(-2px); }
-
-        /* Falling Hearts Animation */
-        .heart-particle { position: fixed; top: -10%; pointer-events: none; z-index: 1; animation: fallAndSway linear infinite; will-change: transform, opacity; }
-        @keyframes fallAndSway {
-            0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0; }
-            10% { opacity: 0.85; }
-            90% { opacity: 0.85; }
-            100% { transform: translateY(110vh) rotate(360deg) translateX(50px); opacity: 0; }
-        }
-
-        .media-placeholder { background: linear-gradient(135deg, #ffb3c6 0%, #ff8fab 50%, #ff4d6d 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.15); position: relative; overflow: hidden; }
-        .pulse-heart { animation: heartPulse 1.5s infinite ease-in-out; }
-        @keyframes heartPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
-        .menu-card { transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
-        .menu-card:hover { transform: translateY(-6px); box-shadow: 0 20px 30px -10px rgba(201, 24, 74, 0.25); }
-
-        /* 3D Card Flip CSS for Memory Game */
-        .perspective-1000 { perspective: 1000px; }
-        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
-        .card-inner.flipped { transform: rotateY(180deg); }
-        .card-front, .card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 1rem; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        
-        .card-front { background: linear-gradient(135deg, #ff8fab 0%, #ff4d6d 100%); color: white; border: 2px solid rgba(255, 255, 255, 0.85); box-shadow: 0 4px 10px rgba(201, 24, 74, 0.2); font-size: 2rem; }
-        .card-back { background: #ffffff; border: 2px solid #ffb3c6; transform: rotateY(180deg); box-shadow: inset 0 0 10px rgba(255, 182, 193, 0.3); }
-
-        /* Modal Overlay */
-        .modal-overlay { background: rgba(11, 12, 16, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-
-        /* 🌌 STARRY SPACE & ENVELOPE STYLES */
-        .universe-bg { background: linear-gradient(to bottom, #0b0c10 0%, #1f2833 60%, #0d1117 100%); position: relative; overflow: hidden; }
-        .star { position: absolute; background: white; border-radius: 50%; animation: twinkle var(--duration, 3s) infinite ease-in-out; opacity: 0.3; }
-        @keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.3); } }
-
-        .envelope-container { position: relative; width: 280px; height: 180px; margin: 0 auto; perspective: 800px; cursor: pointer; }
-        @media (min-width: 640px) { .envelope-container { width: 330px; height: 210px; } }
-        .envelope-wrapper { position: relative; width: 100%; height: 100%; background: #ffccd5; border-radius: 0 0 16px 16px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); }
-        .envelope-flap { position: absolute; top: 0; left: 0; width: 0; height: 0; border-left: 140px solid transparent; border-right: 140px solid transparent; border-top: 105px solid #ffb3c6; transform-origin: top; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); z-index: 5; }
-        @media (min-width: 640px) { .envelope-flap { border-left-width: 165px; border-right-width: 165px; border-top-width: 120px; } }
-        .envelope-pocket { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; border-radius: 0 0 16px 16px; background: linear-gradient(135deg, #ff758f 0%, #ff4d6d 100%); clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%); z-index: 4; }
-        .wax-seal { position: absolute; top: 90px; left: 50%; transform: translate(-50%, -50%); width: 48px; height: 48px; background: linear-gradient(135deg, #c9184a 0%, #800f2f 100%); border-radius: 50%; box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); display: flex; align-items: center; justify-content: center; color: #ffe5ec; font-size: 16px; z-index: 6; transition: all 0.4s ease; border: 2px solid #ff8fab; }
-        @media (min-width: 640px) { .wax-seal { top: 105px; width: 52px; height: 52px; font-size: 18px; } }
-        .envelope-letter { position: absolute; bottom: 10px; left: 5%; width: 90%; min-height: 290px; background: #ffffff; border-radius: 12px; padding: 16px 14px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25); transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease; z-index: 2; opacity: 0; pointer-events: none; border: 1px solid #ffe5ec; }
-        .envelope-container.open .envelope-flap { transform: rotateX(180deg); z-index: 1; }
-        .envelope-container.open .wax-seal { opacity: 0; transform: translate(-50%, -50%) scale(0.5); pointer-events: none; }
-        .envelope-container.open .envelope-letter { transform: translateY(-155px); opacity: 1; z-index: 10; pointer-events: auto; }
-        @media (min-width: 640px) { .envelope-container.open .envelope-letter { transform: translateY(-185px); } }
-
-        .cursor-blink { display: inline-block; width: 2px; height: 1.1em; background-color: #c9184a; vertical-align: middle; animation: blink 0.8s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-
-        /* 🧩 ROMANTIC BLOCK BLAST CELL STYLES */
-        .block-cell { aspect-ratio: 1 / 1; border-radius: 6px; transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease; }
-        .block-cell.filled { background: linear-gradient(135deg, #ff4d6d 0%, #c9184a 100%); box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), 0 3px 6px rgba(201, 24, 74, 0.3); border: 1px solid #ff758f; }
-        .block-cell.valid-preview { background-color: rgba(255, 182, 193, 0.7) !important; border: 2px dashed #ff4d6d !important; transform: scale(0.96); }
-        .block-cell.invalid-preview { background-color: rgba(239, 68, 68, 0.3) !important; border: 2px dashed #ef4444 !important; }
-        .block-cell.clearing { animation: blastCell 0.4s ease-out forwards; }
-        @keyframes blastCell { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3) rotate(12deg); filter: brightness(1.6); } 100% { transform: scale(0); opacity: 0; } }
-
-        /* Floating Toast */
-        .floating-toast { position: fixed; top: 20%; left: 50%; transform: translate(-50%, -50%) scale(0.8); opacity: 0; pointer-events: none; z-index: 100; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .floating-toast.show { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        #dragGhost { position: fixed; pointer-events: none; z-index: 999; display: none; transform: translate(-50%, -80%) scale(1.1); filter: drop-shadow(0 15px 25px rgba(201, 24, 74, 0.4)); }
-        .timer-warning { animation: timerPulse 0.5s infinite alternate; color: #e63946 !important; }
-        @keyframes timerPulse { from { transform: scale(1); } to { transform: scale(1.15); } }
-
-        /* Oculta área do PDF da tela visualmente, mas mantém no DOM */
-        #pdfGeneratorContainer {
-            position: absolute;
-            left: -9999px;
-            top: 0;
-            opacity: 0;
-            pointer-events: none;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nosso Amor 💖</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:Poppins,sans-serif;background:linear-gradient(135deg,#fff0f3,#ffccd5 50%,#ffe5ec) fixed;min-height:100vh;color:#590d22;overflow-x:hidden}
+h1,h2,h3,.ser{font-family:'Playfair Display',serif}.cur{font-family:'Dancing Script',cursive}
+.gc{background:rgba(255,255,255,.88);backdrop-filter:blur(16px);border:1px solid #fff;box-shadow:0 15px 35px -5px rgba(201,24,74,.12)}
+#blockblast .gc{backdrop-filter:none}
+.page{display:none}.page.active{display:block;animation:fi .4s}
+@keyframes fi{from{opacity:0;transform:translateY(12px)}}
+.b1{background:linear-gradient(135deg,#ff4d6d,#c9184a);box-shadow:0 8px 18px -5px rgba(201,24,74,.4);color:#fff}
+.b2{background:rgba(255,255,255,.92);color:#a4133c;border:1px solid rgba(255,143,171,.6)}
+button{transition:.2s}button:active{transform:scale(.97)}
+.hp{position:fixed;top:-10%;pointer-events:none;z-index:1;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg);opacity:0}}
+.ub{background:linear-gradient(#0b0c10,#1f2833 60%,#0d1117);position:relative;overflow:hidden}
+.star{position:absolute;background:#fff;border-radius:50%;animation:tw 2s infinite alternate}
+@keyframes tw{from{opacity:.2}to{opacity:1}}
+#mg{perspective:1000px}
+.mc{aspect-ratio:1;position:relative;cursor:pointer;transform-style:preserve-3d;transition:transform .6s}
+.mc.f{transform:rotateY(180deg)}
+.mf{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:12px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.mb{background:linear-gradient(135deg,#ff8fab,#ff4d6d);border:2px solid #fff;font-size:1.5rem}.mfr{background:#fff;transform:rotateY(180deg)}
+.bd{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;aspect-ratio:1;background:rgba(255,255,255,.5);padding:4px;border-radius:8px;border:2px solid #fff;touch-action:none}
+.bc{background:rgba(255,255,255,.7);border-radius:4px}
+.bp{display:grid;gap:2px;cursor:grab;touch-action:none}
+.bp.dg{position:fixed;z-index:9999;opacity:.9;pointer-events:none}
+.bk{border-radius:4px;box-shadow:inset 0 0 5px rgba(255,255,255,.5)}
+.k1{background:#ff4d6d}.k2{background:#c9184a}.k3{background:#ff8fab}.k4{background:#a01a58}.k5{background:#ffb3c6}
+#pdfBox{position:absolute;left:-9999px;top:0}
+</style>
 </head>
-<body class="flex flex-col min-h-screen justify-between py-6 px-4 sm:px-6 relative">
+<body class="flex flex-col min-h-screen py-6 px-4">
+<div id="hc" class="fixed inset-0 pointer-events-none overflow-hidden"></div>
+<main class="w-full max-w-xl mx-auto my-auto relative z-10">
 
-    <div class="ambient-light w-72 h-72 bg-pink-400 top-10 left-[-50px]"></div>
-    <div class="ambient-light w-80 h-80 bg-rose-300 bottom-10 right-[-60px]"></div>
+<section class="page active" id="login"><div class="gc rounded-3xl p-8 text-center">
+<div class="text-5xl mb-4">💖</div><h1 class="text-3xl font-bold text-rose-900 mb-3">Acesso Secreto 💌</h1>
+<p class="text-rose-700/80 text-sm italic mb-6">Só quem viveu nossa história sabe a senha para entrar aqui.</p>
+<div class="space-y-4 max-w-xs mx-auto">
+<input id="pw" type="password" inputmode="numeric" autocomplete="off" placeholder="Digite a senha" class="w-full py-3.5 px-4 text-center text-lg tracking-widest rounded-2xl border-2 border-pink-200 outline-none focus:border-rose-600">
+<button onclick="chk()" class="b1 w-full py-3.5 rounded-2xl font-medium">Entrar 💖</button>
+<p id="lm" class="text-rose-600 text-sm min-h-[20px]"></p></div></div></section>
 
-    <main class="w-full max-w-xl mx-auto my-auto relative z-10">
+<section class="page" id="home">
+<div class="gc rounded-3xl p-6 text-center mb-5"><h1 class="text-2xl font-bold text-rose-900">BEM-VINDA MINHA PRINCESA 💖</h1>
+<div class="my-4 p-4 rounded-2xl bg-rose-100/60"><p class="text-xs uppercase tracking-widest text-rose-700 font-semibold">💕 Estamos juntos há</p><span id="cnt" class="text-lg font-bold text-rose-700"></span></div></div>
+<div id="menu" class="grid grid-cols-2 gap-3.5"></div></section>
 
-        <!-- 1. 🔐 LOGIN -->
-        <section class="page active" id="login">
-            <div class="glass-card rounded-3xl p-8 sm:p-10 text-center relative overflow-hidden">
-                <div class="inline-flex items-center justify-center w-20 h-20 bg-rose-100 rounded-full mb-6 shadow-inner pulse-heart">
-                    <i class="fa-solid fa-heart text-4xl text-rose-600"></i>
-                </div>
-                <h1 class="text-3xl sm:text-4xl font-bold text-rose-900 mb-3">Acesso Secreto 💌</h1>
-                <p class="text-rose-700/80 text-sm sm:text-base italic mb-8 max-w-xs mx-auto">
-                    Só quem viveu nossa história sabe a senha para entrar aqui.
-                </p>
-                <div class="space-y-4 max-w-xs mx-auto">
-                    <input type="password" id="password" placeholder="Digite a senha (DDMM)" inputmode="numeric" autocomplete="off"
-                        class="glass-input w-full py-3.5 px-4 text-center text-lg font-semibold tracking-widest text-rose-900 rounded-2xl placeholder-rose-300">
-                    <button onclick="checkPassword()" 
-                        class="btn-romantic w-full py-3.5 px-6 rounded-2xl text-white font-medium text-base tracking-wide flex items-center justify-center gap-2">
-                        <span>Entrar 💖</span> <i class="fa-solid fa-arrow-right text-xs"></i>
-                    </button>
-                    <p id="loginMsg" class="text-rose-600 font-medium text-sm min-h-[20px] transition-all"></p>
-                </div>
-            </div>
-        </section>
+<section class="page" id="vales"><div class="gc rounded-3xl p-6 text-center space-y-4">
+<h1 class="text-2xl font-bold text-rose-900">Vales do Amor 🎟️</h1>
+<p class="text-xs text-rose-700/80 italic">Clique no vale que você quer resgatar para baixar em PDF e mandar para mim!</p>
+<div id="vg" class="grid gap-3 max-w-sm mx-auto"></div></div></section>
 
-        <!-- 2. 🏠 HOME -->
-        <section class="page" id="home">
-            <div class="space-y-6">
-                <div class="glass-card rounded-3xl p-6 text-center relative overflow-hidden">
-                    <span class="inline-block px-3.5 py-1 bg-gradient-to-r from-rose-500 to-pink-500 text-white text-xs font-bold rounded-full mb-3 uppercase tracking-wider shadow-sm">
-                        ✨ Nosso Cantinho Secreto ✨
-                    </span>
-                    <h1 class="text-2xl sm:text-3xl font-bold text-rose-900 mb-2">BEM-VINDA MINHA PRINCESA💖</h1>
-                    
-                    <div class="my-5 p-4 rounded-2xl bg-gradient-to-r from-rose-500/10 via-pink-500/10 to-rose-500/10 border border-rose-200/50">
-                        <p class="text-xs uppercase tracking-widest text-rose-700 font-semibold mb-1">💕 Estamos juntos há</p>
-                        <span id="timeTogether" class="block text-lg sm:text-xl font-bold text-rose-700"></span>
-                    </div>
-                </div>
+<section class="page" id="quiz"><div class="gc rounded-3xl p-6 text-center space-y-4">
+<div class="flex justify-between items-center"><span class="text-xs font-bold text-rose-500 uppercase">Quiz do Nosso Amor 💕</span><span class="px-3 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-semibold">💋 <b id="kc">0</b></span></div>
+<h1 class="text-xl font-bold text-rose-900">Quiz: Nicolais &amp; Marília</h1>
+<p id="qq" class="font-medium min-h-[48px] flex items-center justify-center"></p>
+<div id="qa" class="space-y-3 max-w-sm mx-auto"></div>
+<button id="kb" onclick="nextQ()" class="b1 hidden w-full max-w-sm py-3 rounded-2xl font-semibold text-sm">Pagar Beijo 😘 (Próxima)</button>
+<p id="qr" class="font-semibold min-h-[24px]"></p></div></section>
 
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3.5">
-                    
-                    <!-- Novo Botão Vales do Amor -->
-                    <div class="menu-card glass-card rounded-2xl overflow-hidden cursor-pointer group col-span-2 sm:col-span-3 border-2 border-pink-400/80 shadow-md" onclick="openPage('vales')">
-                        <div class="h-20 bg-gradient-to-r from-pink-500 via-rose-500 to-pink-500 flex flex-col items-center justify-center relative p-3 text-white text-center">
-                            <h3 class="relative z-10 text-lg font-bold font-serif text-white tracking-wide"><i class="fa-solid fa-ticket"></i> Vales do Amor 🎟️</h3>
-                            <p class="text-[10px] uppercase font-bold tracking-widest text-pink-100 mt-1">Baixe cupons especiais!</p>
-                        </div>
-                    </div>
+<section class="page" id="photos"><div class="gc rounded-3xl p-6 text-center space-y-4">
+<div class="flex justify-between items-center"><h1 class="text-2xl font-bold text-rose-900">Nosso Livro 📖💖</h1><span id="pi" class="text-xs text-rose-500 bg-rose-100 px-3 py-1 rounded-full"></span></div>
+<div id="bk" class="bg-white/80 rounded-2xl p-4 shadow border border-rose-100 max-w-sm mx-auto">
+<div id="mc" class="w-full h-72 rounded-xl overflow-hidden bg-rose-100 flex items-center justify-center"></div>
+<div class="flex justify-between items-center pt-4"><button onclick="pg(-1)" class="b2 w-10 h-10 rounded-full"><i class="fa-solid fa-chevron-left"></i></button><span class="text-xs text-rose-400">Deslize ou clique</span><button onclick="pg(1)" class="b2 w-10 h-10 rounded-full"><i class="fa-solid fa-chevron-right"></i></button></div></div></div></section>
 
-                    <div class="menu-card glass-card rounded-2xl overflow-hidden cursor-pointer group col-span-2 sm:col-span-3 border-2 border-rose-500/80 shadow-lg" onclick="openPage('blockblast')">
-                        <div class="h-24 bg-gradient-to-r from-rose-600 via-pink-600 to-rose-500 flex flex-col items-center justify-center relative p-3 text-white text-center">
-                            <div class="relative z-10 flex items-center gap-2 mb-1">
-                                <i class="fa-solid fa-stopwatch text-pink-200 text-sm animate-bounce"></i>
-                                <span class="text-xs uppercase font-bold tracking-widest text-pink-100">Desafio de 30s + Pergunta!</span>
-                            </div>
-                            <h3 class="relative z-10 text-xl font-bold font-serif text-white tracking-wide">🧩 Encaixe Perfeito 💖</h3>
-                        </div>
-                    </div>
+<section class="page" id="playlist"><div class="gc rounded-3xl p-6 text-center space-y-4">
+<h1 class="text-2xl font-bold text-rose-900">Nossa Playlist 🎶</h1>
+<iframe style="border-radius:16px" src="https://open.spotify.com/embed/playlist/3VLj0YpYDdyON6ZzFphoMz" width="100%" height="380" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div></section>
 
-                    <div class="menu-card glass-card rounded-2xl overflow-hidden cursor-pointer group col-span-2 sm:col-span-3 border-2 border-amber-400/80 shadow-md" onclick="openPage('openwhen')">
-                        <div class="h-24 universe-bg flex flex-col items-center justify-center relative p-3 text-white text-center">
-                            <div class="absolute inset-0 bg-gradient-to-r from-rose-900/40 via-purple-900/40 to-indigo-900/40"></div>
-                            <div class="relative z-10 flex items-center gap-2 mb-1">
-                                <i class="fa-solid fa-star text-amber-300 text-xs animate-pulse"></i>
-                                <span class="text-[10px] uppercase font-bold tracking-widest text-amber-200">Cartas Especiais</span>
-                            </div>
-                            <h3 class="relative z-10 text-lg font-bold font-serif text-white tracking-wide">🌌 Abra Quando... 💌</h3>
-                        </div>
-                    </div>
+<section class="page" id="memory"><div class="gc rounded-3xl p-5 text-center space-y-4">
+<div class="flex justify-between items-center text-xs font-semibold text-rose-700"><span class="font-bold text-rose-500 uppercase">Joguinho Romântico</span><span>Tentativas: <b id="mm">0</b> <button onclick="initMem()" class="ml-2 bg-rose-100 p-1.5 rounded-full" title="Reiniciar"><i class="fa-solid fa-rotate-right"></i></button></span></div>
+<h1 class="text-2xl font-bold text-rose-900">Memória do Amor 🧩</h1>
+<div id="mg" class="grid grid-cols-4 gap-2.5 max-w-xs mx-auto"></div></div></section>
 
-                    <div class="menu-card glass-card rounded-2xl overflow-hidden cursor-pointer group" onclick="openPage('quiz')">
-                        <div class="h-20 media-placeholder group-hover:scale-105 transition-transform duration-500"><i class="fa-solid fa-gamepad text-xl mb-0.5 text-white/90"></i></div>
-                        <div class="p-2 text-center bg-white/40 backdrop-blur-sm"><p class="font-semibold text-rose-900 text-xs">🎮 Nosso Quiz</p></div>
-                    </div>
+<section class="page" id="catcher"><div class="gc rounded-3xl p-5 text-center space-y-3">
+<div class="flex justify-between text-sm font-semibold text-rose-800"><span>🏆 Pontos: <b id="cs">0</b></span><span>Vidas: <span id="cl">❤️❤️❤️</span></span></div>
+<h1 class="text-xl font-bold text-rose-900">Chuva de Amor 🌧️💖</h1>
+<div class="relative w-full max-w-md mx-auto aspect-[4/5] bg-gradient-to-b from-rose-100 to-rose-200 rounded-2xl overflow-hidden border border-rose-200">
+<canvas id="cv" class="w-full h-full block touch-none"></canvas>
+<div id="cso" class="absolute inset-0 bg-white/80 flex flex-col items-center justify-center p-6"><div class="text-5xl mb-2">💌</div><h3 id="cst" class="text-lg font-bold text-rose-900 mb-2">Colete Nosso Amor</h3><button onclick="startCatch()" class="b1 py-3 px-8 rounded-full text-sm font-bold">Começar a Jogar 🎮</button></div></div></div></section>
 
-                    <div class="menu-card glass-card rounded-2xl overflow-hidden cursor-pointer group" onclick="openPage('photos')">
-                        <div class="h-20 media-placeholder group-hover:scale-105 transition-transform duration-500"><i class="fa-solid fa-book-bookmark text-xl mb-0.5 text-white/90"></i></div>
-                        <div class="p-2 text-center bg-white/40 backdrop-blur-sm"><p class="font-semibold text-rose-900 text-xs">📸 Memórias</p></div>
-                    </div>
+<section class="page" id="openwhen"><div class="ub rounded-3xl p-6 text-center text-white space-y-4 min-h-[500px]">
+<div id="sc" class="absolute inset-0 pointer-events-none"></div>
+<h1 class="relative text-2xl font-bold text-pink-100">Nossa Galáxia 🌌</h1>
+<p class="relative text-xs text-pink-200/80 italic">Escolha um momento para ler uma carta especial.</p>
+<div id="eg" class="relative grid grid-cols-1 sm:grid-cols-2 gap-3"></div></div></section>
 
-                    <div class="menu-card glass-card rounded-2xl overflow-hidden cursor-pointer group" onclick="openPage('playlist')">
-                        <div class="h-20 media-placeholder group-hover:scale-105 transition-transform duration-500"><i class="fa-solid fa-music text-xl mb-0.5 text-white/90"></i></div>
-                        <div class="p-2 text-center bg-white/40 backdrop-blur-sm"><p class="font-semibold text-rose-900 text-xs">🎶 Playlist</p></div>
-                    </div>
+<section class="page" id="blockblast"><div class="gc rounded-3xl p-5 text-center space-y-3">
+<div class="flex justify-between items-center text-sm font-semibold text-rose-800"><span>🏆 Pontos: <b id="bs">0</b></span><span class="px-3 py-1 bg-rose-100 rounded-full border border-rose-300">⏱️ <b id="bt">30s</b></span></div>
+<h1 class="text-xl font-bold text-rose-900">Encaixe Perfeito 🧩💖</h1>
+<p class="text-[11px] text-rose-700/80">Arraste as peças. A cada 30s, responda uma pergunta para dobrar os pontos!</p>
+<div class="max-w-xs mx-auto"><div id="bd" class="bd"></div></div>
+<div id="tray" class="flex justify-around items-center h-[100px] max-w-xs mx-auto p-2 bg-white/70 rounded-2xl border border-rose-100"></div>
+<button id="bsb" onclick="initBB()" class="b1 w-full py-2.5 rounded-full text-sm font-semibold">▶ Iniciar Jogo</button></div></section>
+</main>
 
-                    <div class="menu-card glass-card rounded-2xl overflow-hidden cursor-pointer group" onclick="openPage('memory')">
-                        <div class="h-20 media-placeholder group-hover:scale-105 transition-transform duration-500"><i class="fa-solid fa-puzzle-piece text-xl mb-0.5 text-white/90"></i></div>
-                        <div class="p-2 text-center bg-white/40 backdrop-blur-sm"><p class="font-semibold text-rose-900 text-xs">🧩 Memória</p></div>
-                    </div>
+<div id="ow" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80">
+<div class="ub rounded-3xl p-5 max-w-sm w-full text-center shadow-2xl border border-indigo-500/40 space-y-3">
+<div class="flex justify-between items-center"><span id="owt" class="text-xs font-semibold text-pink-200 uppercase"></span><button onclick="closeOW()" class="w-8 h-8 rounded-full bg-white/10 text-white"><i class="fa-solid fa-xmark"></i></button></div>
+<div id="em" class="w-full h-44 rounded-xl overflow-hidden bg-rose-100 flex items-center justify-center text-4xl"></div>
+<div class="bg-white text-rose-950 rounded-xl p-4 text-left max-h-48 overflow-y-auto"><p id="et" class="ser text-sm leading-relaxed"></p></div>
+<button onclick="closeOW()" class="w-full py-2.5 rounded-full bg-rose-600 text-white text-xs font-semibold">Fechar Cartinha 💌</button></div></div>
 
-                    <div class="menu-card glass-card rounded-2xl overflow-hidden cursor-pointer group col-span-2 sm:col-span-2" onclick="openPage('catcher')">
-                        <div class="h-20 media-placeholder group-hover:scale-105 transition-transform duration-500"><i class="fa-solid fa-cloud-showers-heavy text-xl mb-0.5 text-white/90"></i></div>
-                        <div class="p-2 text-center bg-white/40 backdrop-blur-sm"><p class="font-semibold text-rose-900 text-xs">🌧️ Chuva de Amor</p></div>
-                    </div>
-                </div>
-            </div>
-        </section>
+<div id="bq" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80">
+<div class="gc bg-white rounded-3xl p-6 max-w-sm w-full text-center space-y-3"><h2 class="text-2xl font-bold text-rose-900">Desafio do Amor! ⏳</h2><p id="bqt" class="font-medium"></p><div id="bqa" class="flex flex-col gap-3"></div></div></div>
 
-        <!-- 🎟️ VALES DO AMOR -->
-        <section class="page" id="vales">
-            <div class="glass-card rounded-3xl p-6 text-center space-y-6">
-                <div class="flex items-center justify-between pb-3 border-b border-rose-200/60">
-                    <span class="text-xs font-bold text-rose-500 tracking-wider uppercase">Vouchers Românticos</span>
-                </div>
-                <h1 class="text-2xl sm:text-3xl font-bold font-serif text-rose-900 mb-1">Vales do Amor 🎟️</h1>
-                <p class="text-xs text-rose-700/80 italic max-w-xs mx-auto">Clique no vale que você quer resgatar para baixar sua arte em PDF e mandar para mim!</p>
-                
-                <div class="grid grid-cols-1 gap-4 max-w-sm mx-auto" id="valesGrid">
-                    <!-- Gerados via JS -->
-                </div>
+<div id="toast" class="b1 fixed top-1/4 left-1/2 -translate-x-1/2 px-5 py-3 rounded-full text-xs font-bold pointer-events-none z-[100] text-center" style="opacity:0;transition:opacity .4s"></div>
 
-                <div class="pt-4 border-t border-rose-200/60">
-                    <button onclick="openPage('home')" class="btn-secondary w-full py-2.5 px-6 rounded-full text-xs font-medium inline-flex justify-center items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Voltar ao Menu</button>
-                </div>
-            </div>
-        </section>
-        
-        <!-- 3. 🎮 QUIZ -->
-        <section class="page" id="quiz">
-            <div class="glass-card rounded-3xl p-6 sm:p-8 text-center space-y-6">
-                <div class="flex items-center justify-between pb-4 border-b border-rose-200/60">
-                    <span class="text-xs font-bold text-rose-500 tracking-wider uppercase">Quiz do Nosso Amor 💕</span>
-                    <span class="px-3 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-semibold">💋 Beijos: <span id="kissCount" class="font-bold">0</span></span>
-                </div>
-                <div>
-                    <h1 class="text-2xl font-bold text-rose-900 mb-2">Quiz: Nicolais & Marília</h1>
-                    <p id="question" class="text-base text-rose-800 font-medium min-h-[48px] flex items-center justify-center px-2"></p>
-                </div>
-                <div id="answers" class="space-y-3 max-w-sm mx-auto"></div>
-                <div class="space-y-3 pt-2">
-                    <button class="btn-romantic w-full max-w-sm py-3 px-6 rounded-2xl text-white font-semibold text-sm hidden mx-auto shadow-lg" id="kissBtn" onclick="nextQuestion()">Pagar Beijo 😘 (Próxima)</button>
-                    <p id="result" class="text-rose-600 font-semibold text-base min-h-[24px]"></p>
-                </div>
-                <div class="pt-4 border-t border-rose-200/60">
-                    <button onclick="openPage('home')" class="btn-secondary py-2.5 px-6 rounded-full text-xs font-medium inline-flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Voltar ao Menu</button>
-                </div>
-            </div>
-        </section>
+<div id="pdfBox"><div id="pdfArt" class="bg-gradient-to-br from-pink-50 via-rose-100 to-pink-200 p-8" style="width:800px;height:450px">
+<div class="border-4 border-dashed border-rose-400 rounded-3xl h-full flex flex-col items-center justify-center bg-white/70 relative p-10">
+<div class="absolute top-6 left-6 text-rose-300 text-5xl"><i class="fa-solid fa-heart"></i></div><div class="absolute top-6 right-6 text-rose-300 text-5xl"><i class="fa-solid fa-heart"></i></div>
+<div class="absolute bottom-6 left-6 text-rose-300 text-5xl"><i class="fa-solid fa-heart"></i></div><div class="absolute bottom-6 right-6 text-rose-300 text-5xl"><i class="fa-solid fa-heart"></i></div>
+<h2 class="ser text-3xl text-rose-500 font-bold mb-2 uppercase tracking-widest">Vale Especial 🎟️</h2>
+<h3 id="pT" class="cur text-6xl text-rose-700 mb-6 text-center leading-tight"></h3>
+<p id="pD" class="ser text-2xl text-rose-900 font-medium text-center px-12 mb-8"></p>
+<div class="mt-auto px-8 py-3 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full"><p id="pV" class="text-lg font-bold text-white uppercase tracking-wider"></p></div></div></div></div>
 
-        <!-- 4. 📖 LIVRO DE MEMÓRIAS -->
-        <section class="page" id="photos">
-            <div class="glass-card rounded-3xl p-6 text-center space-y-6">
-                <div class="flex items-center justify-between">
-                    <h1 class="text-2xl font-bold text-rose-900">Nosso Livro 📖💖</h1>
-                    <span id="pageIndicator" class="text-xs font-medium text-rose-500 bg-rose-100 px-3 py-1 rounded-full"></span>
-                </div>
-                <div class="relative bg-white/80 rounded-2xl p-4 shadow-lg border border-rose-100 max-w-sm mx-auto min-h-[380px] flex flex-col justify-between" id="bookContainer">
-                    <div class="w-full h-64 sm:h-72 rounded-xl overflow-hidden shadow-inner bg-rose-100 relative">
-                        <div id="mediaContainer" class="w-full h-full flex items-center justify-center"></div>
-                    </div>
-                    <div class="flex items-center justify-between pt-4">
-                        <button onclick="prevPage()" class="btn-secondary w-10 h-10 rounded-full flex items-center justify-center text-rose-700"><i class="fa-solid fa-chevron-left"></i></button>
-                        <span class="text-xs text-rose-400 font-light">Deslize ou clique</span>
-                        <button onclick="nextPage()" class="btn-secondary w-10 h-10 rounded-full flex items-center justify-center text-rose-700"><i class="fa-solid fa-chevron-right"></i></button>
-                    </div>
-                </div>
-                <div>
-                    <button onclick="openPage('home')" class="btn-secondary py-2.5 px-6 rounded-full text-xs font-medium inline-flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Voltar ao Menu</button>
-                </div>
-            </div>
-        </section>
+<script>
+const $=i=>document.getElementById(i),shuf=a=>[...a].sort(()=>Math.random()-.5);
+function toast(m){const t=$('toast');t.textContent=m;t.style.opacity=1;clearTimeout(t._t);t._t=setTimeout(()=>t.style.opacity=0,2500)}
 
-        <!-- 5. 🎵 PLAYLIST -->
-        <section class="page" id="playlist">
-            <div class="glass-card rounded-3xl p-6 sm:p-8 text-center space-y-6">
-                <h1 class="text-2xl sm:text-3xl font-bold text-rose-900 mb-2">Nossa Playlist 🎶</h1>
-                <div class="rounded-2xl overflow-hidden shadow-xl border border-rose-200/50 bg-black/5">
-                    <iframe style="border-radius: 16px;" src="https://open.spotify.com/embed/playlist/3VLj0YpYDdyON6ZzFphoMz" width="100%" height="380" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-                </div>
-                <button onclick="openPage('home')" class="btn-secondary py-2.5 px-6 rounded-full text-xs font-medium inline-flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Voltar ao Menu</button>
-            </div>
-        </section>
+// NAVEGAÇÃO
+function chk(){if($('pw').value.trim()==='2510')go('home');else{$('lm').textContent='Senha errada 😢';setTimeout(()=>$('lm').textContent='',2000)}}
+$('pw').addEventListener('keydown',e=>{if(e.key==='Enter')chk()});
+function go(id){stopGames();document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$(id).classList.add('active');scrollTo(0,0);({vales:loadVales,quiz:resetQuiz,memory:initMem,catcher:drawInit,blockblast:bbEmpty,openwhen:stars})[id]?.()}
+document.querySelectorAll('.page').forEach(p=>{if(['login','home'].includes(p.id))return;const b=document.createElement('button');b.className='b2 w-full py-2.5 rounded-full text-xs font-medium';b.innerHTML='<i class="fa-solid fa-arrow-left"></i> Voltar ao Menu';b.onclick=()=>go('home');p.firstElementChild.appendChild(b)});
+const MENU=[['vales','ticket','Vales do Amor 🎟️','from-pink-500 to-rose-500',1],['blockblast','puzzle-piece','🧩 Encaixe Perfeito 💖','from-rose-600 to-pink-600',1],['openwhen','star','🌌 Abra Quando... 💌','from-indigo-900 to-purple-900',1],['quiz','gamepad','🎮 Nosso Quiz'],['photos','book-bookmark','📸 Memórias'],['playlist','music','🎶 Playlist'],['memory','puzzle-piece','🧩 Memória'],['catcher','cloud-showers-heavy','🌧️ Chuva de Amor']];
+MENU.forEach(([id,ic,l,g,w])=>{const d=document.createElement('div');d.onclick=()=>go(id);d.className='gc rounded-2xl overflow-hidden cursor-pointer hover:-translate-y-1 transition '+(w?'col-span-2':(id==='catcher'?'col-span-2':''));
+d.innerHTML=w?`<div class="h-20 bg-gradient-to-r ${g} flex items-center justify-center text-white font-bold ser text-lg gap-2"><i class="fa-solid fa-${ic}"></i>${l}</div>`:`<div class="h-16 bg-gradient-to-br from-pink-300 to-rose-500 flex items-center justify-center text-white text-xl"><i class="fa-solid fa-${ic}"></i></div><p class="p-2 text-xs font-semibold text-rose-900">${l}</p>`;$('menu').appendChild(d)});
 
-        <!-- 6. 🧩 JOGO DA MEMÓRIA DO AMOR -->
-        <section class="page" id="memory">
-            <div class="glass-card rounded-3xl p-5 sm:p-7 text-center space-y-5">
-                <div class="flex items-center justify-between pb-3 border-b border-rose-200/60">
-                    <span class="text-xs font-bold text-rose-500 tracking-wider uppercase">Joguinho Romântico</span>
-                    <div class="flex items-center gap-3 text-xs font-semibold text-rose-700">
-                        <span>Tentativas: <strong id="memMoves" class="text-rose-900">0</strong></span>
-                        <button onclick="initMemoryGame()" class="text-rose-500 hover:text-rose-700" title="Reiniciar"><i class="fa-solid fa-rotate-right text-sm"></i></button>
-                    </div>
-                </div>
-                <h1 class="text-2xl font-bold text-rose-900 mb-1">Memória do Amor 🧩</h1>
-                <p class="text-xs text-rose-700/80 italic">Encontre os nossos pares perfeitos!</p>
-                <div id="memoryGrid" class="grid grid-cols-4 gap-2.5 sm:gap-3 max-w-xs sm:max-w-sm mx-auto aspect-square my-2"></div>
-                <div class="pt-2 border-t border-rose-200/60">
-                    <button onclick="openPage('home')" class="btn-secondary py-2.5 px-6 rounded-full text-xs font-medium inline-flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Voltar ao Menu</button>
-                </div>
-            </div>
-        </section>
+// CORAÇÕES E CONTADOR
+setInterval(()=>{const h=document.createElement('div');h.className='hp';h.textContent=['💖','💗','💕','🌸','✨'][Math.random()*5|0];h.style.left=Math.random()*100+'vw';h.style.fontSize=(Math.random()*14+14)+'px';const d=Math.random()*3+4;h.style.animationDuration=d+'s';$('hc').appendChild(h);setTimeout(()=>h.remove(),d*1000)},800);
+function upd(){let d=new Date()-new Date(2025,9,25);if(d<0){$('cnt').textContent='Aguardando o nosso dia... 💖';return}const D=864e5,H=36e5,M=6e4,dd=d/D|0;d-=dd*D;const h=d/H|0;d-=h*H;const m=d/M|0;d-=m*M;$('cnt').textContent=`${dd} dias, ${h}h, ${m}m, ${d/1000|0}s 💖`}
+setInterval(upd,1000);upd();
 
-        <!-- 7. 🌧️ CHUVA DE AMOR -->
-        <section class="page" id="catcher">
-            <div class="glass-card rounded-3xl p-4 sm:p-6 text-center space-y-4">
-                <div class="flex items-center justify-between px-2 pb-2 border-b border-rose-200/60 text-xs sm:text-sm font-semibold text-rose-800">
-                    <div class="flex items-center gap-1.5"><i class="fa-solid fa-trophy text-amber-500"></i> <span>Pontos: <strong id="catcherScore" class="text-rose-900 text-base">0</strong></span></div>
-                    <div class="flex items-center gap-1"><span>Vidas:</span> <span id="catcherLives" class="text-base">❤️❤️❤️</span></div>
-                </div>
-                <h1 class="text-xl sm:text-2xl font-bold text-rose-900">Chuva de Amor 🌧️💖</h1>
-                <div class="relative w-full max-w-md mx-auto aspect-[4/5] bg-gradient-to-b from-rose-100/70 via-pink-50/60 to-rose-200/80 rounded-2xl overflow-hidden border border-rose-200 shadow-inner">
-                    <canvas id="catcherCanvas" class="w-full h-full block cursor-pointer touch-none"></canvas>
-                    <div id="catcherStartOverlay" class="absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center">
-                        <div class="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mb-3 pulse-heart"><i class="fa-solid fa-envelope-open-text text-3xl text-rose-600"></i></div>
-                        <h3 class="text-lg font-bold text-rose-900 mb-2">Colete Nosso Amor</h3>
-                        <button onclick="startCatcherGame()" class="btn-romantic py-3 px-8 rounded-full text-sm font-bold text-white shadow-lg mt-2">Começar a Jogar 🎮</button>
-                    </div>
-                    <div id="catcherGameOverOverlay" class="hidden absolute inset-0 bg-white/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center z-20">
-                        <div class="text-4xl mb-2">💔</div>
-                        <h3 class="text-xl font-bold text-rose-900 mb-1">Fim de Jogo!</h3>
-                        <p class="text-xs text-rose-700 mb-4">Você conseguiu <strong id="finalCatcherScore">0</strong> pontos!</p>
-                        <button onclick="startCatcherGame()" class="btn-romantic py-2.5 px-6 rounded-full text-xs font-bold text-white shadow-md">Tentar Novamente 🔄</button>
-                    </div>
-                </div>
-                <button onclick="openPage('home')" class="btn-secondary py-2.5 px-6 rounded-full text-xs font-medium inline-flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Voltar ao Menu</button>
-            </div>
-        </section>
+// VALES DO AMOR (PDF)
+const VALES=[
+['date','champagne-glasses','Vale Date Romântico','Vale um encontro super especial, arrume-se e deixe eu planejar tudo com muito amor para nós dois.','Próximo fim de semana livre!'],
+['cinema','film','Vale Cinema','Vale uma sessão de cinema completinha, com pipoca e doces, para o filme que VOCÊ escolher.','Até o próximo grande lançamento.'],
+['lanche','burger','Vale Lanche Gordinho','Bateu a fome? Este vale garante o seu lanche ou doce favorito pago pelo seu amor!','Para o dia em que a preguiça bater.'],
+['beijo','face-kiss-wink-heart','Vale Beijos Infinitos','Apresente este vale a qualquer momento para receber uma sessão de beijos ilimitados.','Eterna (uso infinito)!'],
+['juntinhos','people-arrows','Vale Um Dia Juntinhos','Vale um dia inteirinho só nosso, jogados na cama ou no sofá, sem olhar o celular.','Para a próxima folga.'],
+['massagem','spa','Vale Massagem','Vale uma massagem relaxante nas costas e nos pés depois daquele dia muito cansativo.','Sempre que a coluna doer.'],
+['razao','scale-balanced',"Vale 'Você Tem Razão'",'Pode ser ativado no meio de qualquer pequena discussão boba para você ter a razão automaticamente.','Uso único (use com sabedoria!).']];
+function loadVales(){const g=$('vg');if(g.children.length)return;VALES.forEach(v=>{const b=document.createElement('button');b.className='w-full text-left bg-white/70 border border-rose-300 rounded-2xl p-4 flex items-center gap-4 hover:bg-rose-100 shadow-sm';
+b.innerHTML=`<div class="w-12 h-12 shrink-0 bg-gradient-to-br from-rose-400 to-pink-500 rounded-full flex items-center justify-center text-white text-xl"><i class="fa-solid fa-${v[1]}"></i></div><div><h3 class="text-rose-900 font-bold text-sm">${v[2]}</h3><p class="text-xs text-rose-700/80">Toque para baixar o cupom 💌</p></div><i class="fa-solid fa-download ml-auto text-rose-400"></i>`;b.onclick=()=>baixar(v);g.appendChild(b)})}
+function baixar(v){toast('Gerando seu PDF com muito amor... 💌');$('pT').textContent=v[2];$('pD').textContent=v[3];$('pV').textContent='Validade: '+v[4];
+html2pdf().set({margin:0,filename:`Vale_Amor_${v[0]}.pdf`,image:{type:'jpeg',quality:.98},html2canvas:{scale:2,useCORS:true},jsPDF:{unit:'px',format:[800,450],orientation:'landscape'}}).from($('pdfArt')).save().then(()=>setTimeout(()=>toast('Cupom baixado com sucesso! 🎉'),800)).catch(e=>{console.error(e);toast('Erro ao gerar o cupom. Tente novamente.')})}
 
-        <!-- 8. 🌌 ABRA QUANDO... -->
-        <section class="page" id="openwhen">
-            <div class="universe-bg rounded-3xl p-6 text-center text-white min-h-[580px] flex flex-col justify-between relative shadow-2xl border border-indigo-500/30">
-                <div id="starsContainer" class="absolute inset-0 pointer-events-none z-0"></div>
-                <div class="relative z-10 space-y-2 mb-4">
-                    <h1 class="text-2xl sm:text-3xl font-bold font-serif text-pink-100">Nossa Galáxia 🌌</h1>
-                    <p class="text-xs text-pink-200/80 italic max-w-xs mx-auto">Escolha um momento para ler uma carta especial.</p>
-                </div>
-                
-                <div class="relative z-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5 my-auto pb-4">
-                    <!-- Envelopes -->
-                    <div class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-2xl p-4 text-left cursor-pointer transition-all flex items-center gap-3 shadow-md" onclick="openWhenModal('love')">
-                        <div class="w-10 h-10 rounded-xl bg-rose-500/30 border border-rose-300/40 flex items-center justify-center text-lg">🥺</div>
-                        <div><span class="text-[10px] text-pink-300 uppercase font-semibold">Abra quando...</span><p class="text-xs font-semibold text-white">duvidar do meu amor</p></div>
-                    </div>
-                    <div class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-2xl p-4 text-left cursor-pointer transition-all flex items-center gap-3 shadow-md" onclick="openWhenModal('sad')">
-                        <div class="w-10 h-10 rounded-xl bg-blue-500/30 border border-blue-300/40 flex items-center justify-center text-lg">🌧️</div>
-                        <div><span class="text-[10px] text-pink-300 uppercase font-semibold">Abra quando...</span><p class="text-xs font-semibold text-white">estiver triste</p></div>
-                    </div>
-                    <div class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-2xl p-4 text-left cursor-pointer transition-all flex items-center gap-3 shadow-md" onclick="openWhenModal('miss')">
-                        <div class="w-10 h-10 rounded-xl bg-red-500/30 border border-red-300/40 flex items-center justify-center text-lg">❤️‍🔥</div>
-                        <div><span class="text-[10px] text-pink-300 uppercase font-semibold">Abra quando...</span><p class="text-xs font-semibold text-white">sentir saudade</p></div>
-                    </div>
-                    <div class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-2xl p-4 text-left cursor-pointer transition-all flex items-center gap-3 shadow-md" onclick="openWhenModal('bad_day')">
-                        <div class="w-10 h-10 rounded-xl bg-amber-500/30 border border-amber-300/40 flex items-center justify-center text-lg">😫</div>
-                        <div><span class="text-[10px] text-pink-300 uppercase font-semibold">Abra quando...</span><p class="text-xs font-semibold text-white">o dia for ruim</p></div>
-                    </div>
-                    <div class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-2xl p-4 text-left cursor-pointer transition-all flex items-center gap-3 shadow-md" onclick="openWhenModal('sleep')">
-                        <div class="w-10 h-10 rounded-xl bg-indigo-500/30 border border-indigo-300/40 flex items-center justify-center text-lg">🥱</div>
-                        <div><span class="text-[10px] text-pink-300 uppercase font-semibold">Abra quando...</span><p class="text-xs font-semibold text-white">perder o sono</p></div>
-                    </div>
-                    <div class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-2xl p-4 text-left cursor-pointer transition-all flex items-center gap-3 shadow-md" onclick="openWhenModal('smile')">
-                        <div class="w-10 h-10 rounded-xl bg-emerald-500/30 border border-emerald-300/40 flex items-center justify-center text-lg">😊</div>
-                        <div><span class="text-[10px] text-pink-300 uppercase font-semibold">Abra quando...</span><p class="text-xs font-semibold text-white">quiser sorrir</p></div>
-                    </div>
-                    <div class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-2xl p-4 text-left cursor-pointer transition-all flex items-center gap-3 shadow-md" onclick="openWhenModal('future')">
-                        <div class="w-10 h-10 rounded-xl bg-purple-500/30 border border-purple-300/40 flex items-center justify-center text-lg">💍</div>
-                        <div><span class="text-[10px] text-pink-300 uppercase font-semibold">Abra quando...</span><p class="text-xs font-semibold text-white">pensar no futuro</p></div>
-                    </div>
-                    <div class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-2xl p-4 text-left cursor-pointer transition-all flex items-center gap-3 shadow-md" onclick="openWhenModal('insecure')">
-                        <div class="w-10 h-10 rounded-xl bg-fuchsia-500/30 border border-fuchsia-300/40 flex items-center justify-center text-lg">👑</div>
-                        <div><span class="text-[10px] text-pink-300 uppercase font-semibold">Abra quando...</span><p class="text-xs font-semibold text-white">se sentir insegura</p></div>
-                    </div>
-                    <div class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-2xl p-4 text-left cursor-pointer transition-all flex items-center gap-3 shadow-md" onclick="openWhenModal('hug')">
-                        <div class="w-10 h-10 rounded-xl bg-teal-500/30 border border-teal-300/40 flex items-center justify-center text-lg">🫂</div>
-                        <div><span class="text-[10px] text-pink-300 uppercase font-semibold">Abra quando...</span><p class="text-xs font-semibold text-white">precisar de abraço</p></div>
-                    </div>
-                </div>
+// PERGUNTAS
+const Q=[
+{q:"Onde nós nos conhecemos?",a:[["Instagram",1],["Na escola"],["Em uma festa"],["Por amigos em comum"]]},
+{q:"Qual foi o primeiro passo que deu início à nossa conversa?",a:[["Uma resposta a um story",1],["Uma ligação"],["Um convite para sair"]]},
+{q:"Qual foi a data em que eu te pedi em namoro?",a:[["11 de janeiro",1],["11 de fevereiro"],["25 de outubro"]]},
+{q:"Antes de oficializarmos, eu já tinha conhecido sua família?",a:[["Verdadeiro",1],["Falso"]]},
+{q:"Qual foi uma das nossas primeiras grandes etapas presenciais?",a:[["O primeiro encontro",1],["Uma viagem juntos"],["Uma formatura"]]},
+{q:"Quais destas demonstrações de carinho eu já planejei pra você?",a:[["Flores, caixas e bilhetinhos",1],["Apenas um troféu"]]},
+{q:"Nós começamos a namorar antes de nos conhecermos pessoalmente?",a:[["Falso",1],["Verdadeiro"]]},
+{q:"Como eu costumo te chamar carinhosamente?",a:[["Minha princesa",1],["Minha parceira"],["Minha estrela"]]},
+{q:"Quais são as figuras religiosas que eu costumo mencionar nas nossas mensagens?",a:[["Jesus e Maria",1],["Somente São José"],["Santo Antônio"]]},
+{q:"Eu já planejei presentes personalizados com fotos e mensagens pra gente?",a:[["Verdadeiro",1],["Falso"]]},
+{q:"PERGUNTA BÔNUS: Qual foi o momento em que você percebeu que estava apaixonada?",a:[["Eu me apaixono todos os dias!",1]]}];
+const OPT='w-full py-3 px-4 rounded-xl bg-white border border-rose-200 text-rose-900 font-medium text-sm hover:bg-rose-500 hover:text-white shadow-sm';
 
-                <div class="relative z-10 pt-4 border-t border-white/10">
-                    <button onclick="openPage('home')" class="py-2.5 px-6 rounded-full bg-rose-600/90 hover:bg-rose-600 text-white text-xs font-semibold shadow-lg transition-all inline-flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Voltar para a Terra</button>
-                </div>
-            </div>
-        </section>
+// QUIZ
+let kiss=0,qi=0;
+function resetQuiz(){kiss=qi=0;$('kc').textContent=0;showQ()}
+function showQ(){$('qr').textContent='';$('kb').classList.add('hidden');$('qq').textContent=Q[qi].q;const a=$('qa');a.innerHTML='';shuf(Q[qi].a).forEach(o=>{const b=document.createElement('button');b.className=OPT;b.textContent=o[0];b.onclick=()=>{a.innerHTML='';const r=$('qr');if(o[1]){r.style.color='green';r.textContent='Acertou! 💕';setTimeout(nextQ,1000)}else{kiss++;$('kc').textContent=kiss;r.style.color='#d90429';r.textContent='Errou! 😘 Deve um beijo!';$('kb').classList.remove('hidden')}};a.appendChild(b)})}
+function nextQ(){qi++;if(qi<Q.length)showQ();else{$('qq').textContent='Fim do quiz 💖';$('qa').innerHTML='';$('kb').classList.add('hidden');$('qr').style.color='#590d22';$('qr').textContent=`Você me deve ${kiss} beijos hoje! 😏`}}
 
-        <!-- 9. 🧩 BLOCK BLAST -->
-        <section class="page" id="blockblast">
-            <div class="glass-card rounded-3xl p-4 sm:p-6 text-center space-y-4">
-                <div class="flex items-center justify-between px-2 pb-2 border-b border-rose-200/60 text-xs sm:text-sm font-semibold text-rose-800">
-                    <div class="flex items-center gap-1.5"><i class="fa-solid fa-trophy text-amber-500"></i> <span>Pontos: <strong id="bbScore" class="text-rose-900 text-base">0</strong></span></div>
-                    <div class="flex items-center gap-1.5 px-3 py-1 bg-rose-100 rounded-full border border-rose-300">
-                        <i class="fa-solid fa-stopwatch text-rose-600"></i> <strong id="bbTimer" class="text-rose-900 text-sm font-bold w-6">30s</strong>
-                    </div>
-                </div>
-                <h1 class="text-xl sm:text-2xl font-bold text-rose-900">Encaixe Perfeito 🧩💖</h1>
-                <p class="text-[10px] text-rose-700/80">O jogo não acaba! A cada 30 segundos responda a pergunta sobre nós para dobrar os pontos!</p>
+// LIVRO
+const W='WhatsApp Image 2026-11-13 at 10.47.';
+const BK=["01.jpeg","02.jpeg","03.jpeg","03.mp4","04.jpeg","04.mp4","05.jpeg","05.mp4","06.jpeg","07.mp4","08.jpeg","10.jpg","11.jpg","12.jpg","13.jpg",W+"23 (1).jpeg",W+"23 (2).jpeg",W+"23.jpeg",W+"24 (2).jpeg",W+"24 (3).jpeg",W+"24.jpg",W+"25 (1).jpeg",W+"25 (2).jpg",W+"25.jpeg"];
+let bi=0;
+function rb(){const c=$('mc');c.innerHTML='';const f=BK[bi];$('pi').textContent=`${bi+1} / ${BK.length}`;let e;
+if(f.endsWith('.mp4')){e=document.createElement('video');e.controls=e.autoplay=e.muted=e.loop=e.playsInline=true;e.src=encodeURI(f)}
+else{e=new Image();e.src=encodeURI(f);e.onerror=()=>{c.innerHTML=`<div class="text-rose-500 italic p-4 text-sm">Adicione a foto ${f} na pasta!</div>`}}
+e.className='w-full h-full object-cover';c.appendChild(e)}
+function pg(d){const n=bi+d;if(n>=0&&n<BK.length){bi=n;rb()}}
+let tx=0;$('bk').addEventListener('touchstart',e=>tx=e.changedTouches[0].screenX,{passive:true});
+$('bk').addEventListener('touchend',e=>{const d=tx-e.changedTouches[0].screenX;if(d>50)pg(1);if(d<-50)pg(-1)});
+addEventListener('keydown',e=>{if($('photos').classList.contains('active')){if(e.key==='ArrowRight')pg(1);if(e.key==='ArrowLeft')pg(-1)}if(e.key==='Escape')closeOW()});
+rb();
 
-                <div class="w-full max-w-xs sm:max-w-sm mx-auto aspect-square bg-rose-950/15 p-2 rounded-2xl border border-rose-200/80 shadow-inner">
-                    <div id="blockBoard" class="grid grid-cols-8 gap-1 w-full h-full touch-none"></div>
-                </div>
-                <div class="space-y-1">
-                    <div id="blockTray" class="grid grid-cols-3 gap-2 max-w-xs sm:max-w-sm mx-auto min-h-[90px] p-2 bg-white/70 backdrop-blur-sm rounded-2xl border border-rose-100 shadow-sm"></div>
-                </div>
-                <div class="pt-2 border-t border-rose-200/60 flex items-center justify-between">
-                    <button onclick="initBlockBlastGame()" class="btn-secondary py-2 px-4 rounded-full text-xs font-semibold flex items-center gap-1.5"><i class="fa-solid fa-rotate-right text-xs"></i> Reiniciar</button>
-                    <button onclick="openPage('home')" class="btn-secondary py-2 px-4 rounded-full text-xs font-semibold flex items-center gap-1.5"><i class="fa-solid fa-arrow-left text-xs"></i> Menu</button>
-                </div>
-            </div>
-        </section>
+// MEMÓRIA
+const MI=["01,jpeg","08.jpeg","10.jpg",W+"23 (1).jpeg",W+"24 (3).jpeg",W+"24.jpg",W+"25 (1).jpeg",W+"25.jpeg"];
+let fl=[],pairs=0,mv=0;
+function initMem(){const g=$('mg');g.innerHTML='';fl=[];pairs=mv=0;$('mm').textContent=0;
+shuf([...MI,...MI]).forEach(s=>{const c=document.createElement('div');c.className='mc';c.dataset.v=s;c.innerHTML=`<div class="mf mb">💖</div><div class="mf mfr"><img src="${encodeURI(s)}" class="w-full h-full object-cover" onerror="this.outerHTML='💕'"></div>`;c.onclick=()=>{if(fl.length<2&&!c.classList.contains('f')){c.classList.add('f');fl.push(c);if(fl.length===2){$('mm').textContent=++mv;setTimeout(chkM,800)}}};g.appendChild(c)})}
+function chkM(){const[a,b]=fl;if(a.dataset.v===b.dataset.v){if(++pairs===MI.length)setTimeout(()=>alert('Você encontrou todos os pares, mas o meu par perfeito sempre foi você! 💖'),300)}else{a.classList.remove('f');b.classList.remove('f')}fl=[]}
 
-    </main>
+// CHUVA DE AMOR
+const cv=$('cv'),cx=cv.getContext('2d');let pl={x:0,y:0,w:60,h:50},hs=[],cS=0,cL=3,raf=null,spw=null,mi=0;
+const MS=[[10,'10 pontos! Você pegou meu coração 💖'],[25,'25! Minha artilheira do amor 😍'],[50,'50 pontos! Te amo até o infinito ♾️'],[100,'100! Você é a minha campeã 👑']];
+function sz(){const p=cv.parentElement;cv.width=p.clientWidth;cv.height=p.clientHeight;pl.x=cv.width/2-pl.w/2;pl.y=cv.height-pl.h-15}
+function dr(){cx.clearRect(0,0,cv.width,cv.height);cx.textBaseline='top';cx.font='44px Arial';cx.fillText('💌',pl.x+4,pl.y);hs.forEach(h=>{cx.font=h.z+'px Arial';cx.fillText(h.t,h.x,h.y)})}
+function drawInit(){sz();dr()}
+function startCatch(){$('cso').classList.add('hidden');sz();cS=0;cL=3;hs=[];mi=0;$('cs').textContent=0;$('cl').textContent='❤️❤️❤️';cancelAnimationFrame(raf);clearInterval(spw);spw=setInterval(spawn,800);loop()}
+function spawn(){const r=Math.random();let t='🩷',p=1,s=2+Math.random()*2;if(r>.85){t='⭐';p=5;s=4}else if(r>.7){t='💔';p=-1;s=3}hs.push({x:Math.random()*(cv.width-34),y:-34,t,p,s:s*(1+cS/80),z:30})}
+function endCatch(){cancelAnimationFrame(raf);clearInterval(spw);raf=null;$('cso').classList.remove('hidden');$('cst').textContent='Fim! Pontos: '+cS}
+function loop(){for(let i=hs.length-1;i>=0;i--){const h=hs[i];h.y+=h.s;
+if(h.y+h.z>pl.y&&h.y<pl.y+pl.h&&h.x+h.z>pl.x&&h.x<pl.x+pl.w){hs.splice(i,1);if(h.p>0){cS+=h.p;if(mi<MS.length&&cS>=MS[mi][0])toast(MS[mi++][1])}else cL--;$('cs').textContent=cS;$('cl').textContent=cL>0?'❤️'.repeat(cL):'💔';if(cL<=0){dr();return endCatch()}}
+else if(h.y>cv.height)hs.splice(i,1)}dr();raf=requestAnimationFrame(loop)}
+function mvP(e){pl.x=Math.max(0,Math.min(cv.width-pl.w,e.clientX-cv.getBoundingClientRect().left-pl.w/2));if(!raf)dr()}
+cv.addEventListener('pointermove',mvP);cv.addEventListener('pointerdown',mvP);
+addEventListener('keydown',e=>{if(raf){if(e.key==='ArrowLeft')pl.x=Math.max(0,pl.x-25);if(e.key==='ArrowRight')pl.x=Math.min(cv.width-pl.w,pl.x+25)}});
 
-    <!-- Modais e utilitários já existentes... -->
-    <!-- 🌌 FULLSCREEN MODAL FOR "ABRA QUANDO..." ENVELOPES -->
-    <div id="openWhenModalOverlay" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
-        <!-- (mantido intacto do seu código) -->
-        <div class="universe-bg rounded-3xl p-5 sm:p-7 max-w-sm w-full text-center shadow-2xl border border-indigo-500/40 relative flex flex-col justify-between min-h-[500px]">
-            <div class="relative z-10 flex items-center justify-between pb-3 border-b border-white/10">
-                <span id="modalHeaderTitle" class="text-xs font-semibold text-pink-200 tracking-wider uppercase font-serif">Abra quando...</span>
-                <button onclick="closeOpenWhenModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-xs"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="relative z-10 my-auto py-10">
-                <div id="openWhenEnvelope" class="envelope-container" onclick="triggerEnvelopeOpen()">
-                    <div class="envelope-wrapper">
-                        <div class="envelope-flap"></div>
-                        <div class="envelope-pocket"></div>
-                        <div class="wax-seal"><i class="fa-solid fa-heart text-white"></i></div>
-                        <div class="envelope-letter flex flex-col justify-between text-left">
-                            <div class="w-full h-32 rounded-lg overflow-hidden bg-rose-100 shadow-sm border border-rose-200 mb-2 relative" id="envMediaWrapper">
-                                <div id="envMedia" class="w-full h-full flex items-center justify-center"></div>
-                            </div>
-                            <div class="overflow-y-auto max-h-[140px] pr-1">
-                                <p id="openWhenTypewriter" class="text-rose-950 font-serif text-xs leading-relaxed whitespace-pre-line"></p>
-                                <span id="openWhenCursor" class="cursor-blink"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="relative z-10 pt-2 border-t border-white/10">
-                <button onclick="closeOpenWhenModal()" class="w-full py-2.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold shadow-md">Fechar Cartinha 💌</button>
-            </div>
-        </div>
-    </div>
+// ABRA QUANDO
+const EV={
+love:['🥺','duvidar do meu amor','01.jpeg',"Marília, minha princesa, se você está lendo isso, por favor, tire qualquer dúvida dessa sua cabecinha linda. Desde que você respondeu aquele story no Instagram, minha vida mudou. Eu te escolhi no dia 11 de janeiro e continuo te escolhendo todos os dias. Você é a mulher que eu pedi a Jesus e Maria. Nunca duvide que eu sou louco por você!"],
+sad:['🌧️','estiver triste','02.jpeg',"Meu amor, o que aconteceu para tirar esse sorriso lindo do seu rosto? Queria muito estar aí para te dar um abraço bem apertado. Lembra que você é forte, maravilhosa e que eu estou aqui para segurar a sua mão em todos os momentos, bons e ruins. Não fica triste, eu te amo mais do que tudo e Jesus está cuidando de você."],
+miss:['❤️‍🔥','sentir saudade','11.jpg',"Minha princesa, eu também estou morrendo de saudade! Contando os segundos para a gente se ver, para te abraçar e sentir seu cheiro. Lembra do nosso primeiro encontro? É essa mesma magia que eu sinto toda vez que estou com você. Fica com o coração tranquilo, logo estaremos juntinhos de novo. Te amo demais!"],
+bad:['😫','o dia for ruim','12.jpg',"Poxa vida, meu bem... dias ruins infelizmente acontecem, mas eles não definem o nosso amor. Deixa eu cuidar de você hoje. Queria ter te levado flores de cetim e uma caixinha de fotos só pra alegrar seu dia. Respira fundo, amanhã é um novo dia e o meu amor por você só cresce!"],
+sleep:['🥱','perder o sono','13.jpg',"Sem sono, minha rainha? Aposto que a cabecinha tá pensando em mil coisas. Pensa nos nossos momentos e em tudo que ainda vamos viver juntos. Feche os olhos, respire fundo e sinta meu abraço espiritual te protegendo. Jesus, Maria e São José estão zelando pelo seu descanso. Dorme bem, te amo!"],
+smile:['😊','quiser sorrir','10.jpg',"Ah, se você quer sorrir, é só lembrar do quanto eu sou apaixonado por você! Marília, você é a luz dos meus dias. Escrevi todas aquelas cartinhas e fiz tudo isso só para ver esse seu sorriso de novo. Você é o amor da minha vida, minha princesa. Sorria sempre!"],
+future:['💍','pensar no futuro',W+'23.jpeg',"Minha parceira para a vida toda! Toda vez que eu penso no futuro, eu vejo você. Eu imagino as nossas conquistas, nossa casa, a nossa família que vamos construir sob a benção de Jesus e Maria. Cada passo que dou hoje é para que o nosso amanhã seja ainda mais perfeito. Você é o meu melhor plano!"],
+insecure:['👑','se sentir insegura',W+'24 (2).jpeg',"Ei, minha rainha, por que essa insegurança? Olha no espelho e vê o que eu vejo todos os dias: a mulher mais linda, forte, dedicada e maravilhosa desse mundo. Eu me apaixonei por cada detalhe seu, pelo seu sorriso, pela sua voz, pelo seu coração. Você é mais do que o suficiente, você é tudo pra mim!"],
+hug:['🫂','precisar de um abraço',W+'25.jpeg',"Queria tanto poder te abraçar fisicamente agora e não te soltar mais! Sinta meu abraço através dessa cartinha. Lembra do jeito que eu te envolvo nos meus braços? É ali que é o nosso lugar seguro. Estou com você, amor, em pensamento e coração, sempre. Te amo muito!"]};
+Object.entries(EV).forEach(([k,v])=>{const d=document.createElement('div');d.className='bg-white/10 hover:bg-white/20 border border-white/20 rounded-2xl p-4 text-left cursor-pointer flex items-center gap-3';d.onclick=()=>openOW(k);d.innerHTML=`<div class="text-2xl">${v[0]}</div><div><span class="text-[10px] text-pink-300 uppercase font-semibold">Abra quando...</span><p class="text-xs font-semibold">${v[1]}</p></div>`;$('eg').appendChild(d)});
+function stars(){const c=$('sc');if(c.children.length)return;for(let i=0;i<45;i++){const s=document.createElement('div');s.className='star';s.style.cssText=`width:${Math.random()*3+1}px;height:${Math.random()*3+1}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-duration:${Math.random()*2+1}s`;c.appendChild(s)}}
+let twT;
+function openOW(k){const v=EV[k],m=$('em');m.innerHTML='';const im=new Image();im.src=encodeURI(v[2]);im.className='w-full h-full object-cover';im.onerror=()=>m.textContent='💌';m.appendChild(im);
+$('owt').textContent='Abra quando '+v[1];$('et').textContent='';$('ow').classList.remove('hidden');clearTimeout(twT);let i=0;(function t(){if(i<v[3].length){$('et').textContent=v[3].slice(0,++i);twT=setTimeout(t,25)}})()}
+function closeOW(){$('ow').classList.add('hidden');clearTimeout(twT)}
 
-    <!-- 💌 FLOATING DECLARATION MODAL FOR CHUVA DE AMOR -->
-    <div id="declarationModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
-        <!-- (mantido intacto do seu código) -->
-        <div class="glass-card bg-white/95 rounded-3xl p-6 sm:p-8 max-w-sm text-center shadow-2xl border-2 border-rose-200 space-y-4">
-            <div class="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mx-auto pulse-heart"><i class="fa-solid fa-envelope-open-heart text-3xl text-rose-600"></i></div>
-            <h3 id="declarationTitle" class="text-lg font-bold text-rose-900"></h3>
-            <p id="declarationText" class="text-sm text-rose-800 italic leading-relaxed font-serif px-2"></p>
-            <button onclick="closeDeclarationModal()" class="btn-romantic py-3 px-6 rounded-full text-xs font-bold text-white shadow-lg w-full">Continuar Coletando 💕</button>
-        </div>
-    </div>
+// ENCAIXE PERFEITO
+const N=8,bd=$('bd'),tray=$('tray');let G=null,sc=0,tm=30,tI=null,dg=null;
+const SH=[[[[1]],1],[[[1,1]],2],[[[1],[1]],2],[[[1,1],[1,1]],3],[[[1,1,1]],4],[[[1],[1],[1]],4],[[[1,0],[1,1]],5],[[[1,1,1],[0,1,0]],1]];
+function add(n){sc+=n;$('bs').textContent=sc}
+function bbEmpty(){G=Array.from({length:N},()=>Array(N).fill(0));rg()}
+function rg(pv){bd.innerHTML='';for(let r=0;r<N;r++)for(let c=0;c<N;c++){const d=document.createElement('div'),v=G[r][c];d.className='bc'+(v?' k'+v:'');if(pv&&pv.has(r*N+c))d.style.background='rgba(201,24,74,.4)';bd.appendChild(d)}}
+function genTray(){tray.innerHTML='';for(let i=0;i<3;i++){const w=document.createElement('div');w.className='w-20 h-20 flex items-center justify-center';w.appendChild(mkP(SH[Math.random()*SH.length|0]));tray.appendChild(w)}}
+function sS(p,cs){const s=JSON.parse(p.dataset.s);p.style.gridTemplateColumns=`repeat(${s[0].length},${cs}px)`;p.style.gridAutoRows=cs+'px';p.querySelectorAll('.bk').forEach(b=>b.style.width=b.style.height=cs+'px')}
+function mkP([s,c]){const p=document.createElement('div');p.className='bp';p.dataset.c=c;p.dataset.s=JSON.stringify(s);s.forEach(r=>r.forEach(v=>{const b=document.createElement('div');if(v)b.className='bk k'+c;p.appendChild(b)}));sS(p,22);p.addEventListener('pointerdown',e=>{if(dg||!G)return;e.preventDefault();dg={p,o:e.pointerType==='mouse'?10:70};sS(p,Math.round((bd.getBoundingClientRect().width-8)/N-2));p.classList.add('dg');p.setPointerCapture(e.pointerId);p.onpointermove=mvD;p.onpointerup=endD;p.onpointercancel=cancelD;mvD(e)});return p}
+function tg(){const g=bd.getBoundingClientRect(),cw=(g.width-8)/N,s=JSON.parse(dg.p.dataset.s),r=Math.round((dg.y-g.top-4)/cw),c=Math.round((dg.x-g.left-4)/cw),ok=can(s,r,c),cells=new Set();if(ok)s.forEach((row,i)=>row.forEach((v,j)=>{if(v)cells.add((r+i)*N+c+j)}));return{s,r,c,ok,cells}}
+function mvD(e){if(!dg)return;const p=dg.p;dg.x=e.clientX-p.offsetWidth/2;dg.y=e.clientY-p.offsetHeight-dg.o;p.style.left=dg.x+'px';p.style.top=dg.y+'px';const t=tg();rg(t.ok?t.cells:null)}
+function cancelD(){if(!dg)return;const p=dg.p;p.classList.remove('dg');p.style.left=p.style.top='';p.onpointermove=p.onpointerup=p.onpointercancel=null;sS(p,22);dg=null;rg()}
+function endD(){if(!dg)return;const t=tg(),p=dg.p;if(t.ok){p.parentElement.remove();dg=null;place(t.s,t.r,t.c,+p.dataset.c);lines();if(!tray.querySelector('.bp'))genTray();stuck()}else cancelD()}
+function can(s,r,c){if(r<0||c<0||r+s.length>N||c+s[0].length>N)return false;return s.every((row,i)=>row.every((v,j)=>!v||G[r+i][c+j]===0))}
+function place(s,r,c,k){s.forEach((row,i)=>row.forEach((v,j)=>{if(v){G[r+i][c+j]=k;add(10)}}));rg()}
+function lines(){const R=[],C=[];for(let i=0;i<N;i++){if(G[i].every(v=>v))R.push(i);if(G.every(row=>row[i]))C.push(i)}R.forEach(r=>G[r].fill(0));C.forEach(c=>G.forEach(row=>row[c]=0));const n=R.length+C.length;if(n){add(n*100);toast(n>1?`Combo x${n}! 💥`:'Linha completa! 💖')}rg()}
+function stuck(){const ps=[...tray.querySelectorAll('.bp')],fits=s=>{for(let r=0;r<N;r++)for(let c=0;c<N;c++)if(can(s,r,c))return true;return false};if(ps.length&&!ps.some(p=>fits(JSON.parse(p.dataset.s)))){toast('Sem jogadas! Tabuleiro limpo 💖');bbEmpty()}}
+function initBB(){$('bsb').style.display='none';bbEmpty();genTray();sc=0;tm=30;add(0);$('bt').textContent='30s';tick()}
+function tick(){clearInterval(tI);tI=setInterval(()=>{$('bt').textContent=--tm+'s';if(tm<=0)ask()},1000)}
+function ask(){clearInterval(tI);cancelD();const q=Q.filter(x=>x.a.length>1),x=q[Math.random()*q.length|0],a=$('bqa');$('bqt').textContent=x.q;a.innerHTML='';
+shuf(x.a).forEach(o=>{const b=document.createElement('button');b.className=OPT;b.textContent=o[0];b.onclick=()=>{$('bq').classList.add('hidden');if(o[1]){add(sc);toast('Pontos Dobrados! x2 🚀✨')}else toast('Errou! Mas o jogo continua ❤️');tm=30;$('bt').textContent='30s';tick()};a.appendChild(b)});$('bq').classList.remove('hidden')}
 
-    <!-- ❓ BLOCK BLAST TRIVIA TIME SURPRISE MODAL -->
-    <div id="blockBlastTriviaModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
-        <!-- (mantido intacto do seu código) -->
-        <div class="glass-card bg-white/95 rounded-3xl p-6 sm:p-7 max-w-sm w-full text-center shadow-2xl border-2 border-rose-400 space-y-4">
-            <div class="w-14 h-14 bg-rose-100 rounded-full flex items-center justify-center mx-auto pulse-heart"><i class="fa-solid fa-bolt-lightning text-2xl text-rose-600"></i></div>
-            <div>
-                <span class="inline-block px-3 py-0.5 bg-rose-100 text-rose-700 text-[11px] font-bold rounded-full uppercase tracking-widest mb-1">Tempo Esgotado! ⏱️</span>
-                <h3 class="text-xl font-bold text-rose-900">Desafio do Amor! 💖</h3>
-                <p class="text-xs text-rose-700 mt-1">Acerte para <strong>DOBRAR (x2)</strong> sua pontuação!</p>
-            </div>
-            <div class="p-3 bg-rose-50 rounded-2xl border border-rose-200"><p id="bbTriviaQuestion" class="text-sm font-semibold text-rose-900"></p></div>
-            <div id="bbTriviaAnswers" class="space-y-2 text-left"></div>
-        </div>
-    </div>
-
-    <!-- FLOATING TOAST -->
-    <div id="floatingToast" class="floating-toast px-5 py-3 rounded-full bg-gradient-to-r from-rose-600 to-pink-600 text-white font-bold text-xs sm:text-sm shadow-2xl border border-white/40 flex items-center gap-2">
-        <i class="fa-solid fa-heart text-amber-300"></i> <span id="toastMessage"></span>
-    </div>
-    
-    <!-- DRAGGED PIECE GHOST -->
-    <div id="dragGhost"></div>
-
-    <!-- 📄 MOLDE ESCONDIDO DO PDF (Geração Client-Side) -->
-    <div id="pdfGeneratorContainer">
-        <!-- A arte do PDF (tamanho exato para não quebrar) -->
-        <div id="pdfValeArte" class="bg-gradient-to-br from-pink-50 via-rose-100 to-pink-200 p-8 w-[800px] h-[450px]">
-            <div class="border-4 border-dashed border-rose-400 rounded-3xl h-full flex flex-col items-center justify-center bg-white/70 relative p-10">
-                <!-- Enfeites de coração laterais -->
-                <div class="absolute top-6 left-6 text-rose-300 text-5xl"><i class="fa-solid fa-heart"></i></div>
-                <div class="absolute top-6 right-6 text-rose-300 text-5xl"><i class="fa-solid fa-heart"></i></div>
-                <div class="absolute bottom-6 left-6 text-rose-300 text-5xl"><i class="fa-solid fa-heart"></i></div>
-                <div class="absolute bottom-6 right-6 text-rose-300 text-5xl"><i class="fa-solid fa-heart"></i></div>
-                
-                <h2 class="font-serif text-3xl text-rose-500 font-bold mb-2 text-center uppercase tracking-widest">Vale Especial 🎟️</h2>
-                <h3 id="pdfValeTitle" class="font-cursive text-6xl text-rose-700 mb-6 text-center leading-tight">Vale Date</h3>
-                <p id="pdfValeDesc" class="text-2xl text-rose-900 font-medium text-center px-12 mb-8 leading-relaxed font-serif">Descrição do vale aqui.</p>
-                <div class="mt-auto px-8 py-3 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full shadow-lg">
-                    <p id="pdfValeValid" class="text-lg font-bold text-white uppercase tracking-wider">Validade: Para Sempre</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <script>
-        // 🔐 1. LOGIN LOGIC
-        function checkPassword() {
-            if (document.getElementById("password").value.trim() === "2510") {
-                openPage('home');
-            } else {
-                const m = document.getElementById("loginMsg");
-                m.textContent = "Senha errada 😢";
-                setTimeout(() => m.textContent = "", 2000);
-            }
-        }
-        document.getElementById("password")?.addEventListener("keyup", function(e) { if (e.key === "Enter") checkPassword(); });
-
-        // 🔄 PAGE NAVIGATION
-        function openPage(id) {
-            stopAllGames();
-            document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-            document.getElementById(id).classList.add("active");
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            if (id === 'openwhen') initUniverseStars();
-            else if (id === 'memory') initMemoryGame();
-            else if (id === 'catcher') initCatcherCanvas();
-            else if (id === 'blockblast') initBlockBlastGame();
-            else if (id === 'quiz') resetQuiz();
-            else if (id === 'vales') carregarVales();
-        }
-
-        // 🎟️ VALES DO AMOR LÓGICA E PDF
-        const valesData = [
-            { id: 'date', icone: 'fa-champagne-glasses', title: "Vale Date Romântico", desc: "Vale um encontro super especial, arrume-se e deixe eu planejar tudo com muito amor para nós dois.", valid: "Próximo fim de semana livre!" },
-            { id: 'cinema', icone: 'fa-film', title: "Vale Cinema", desc: "Vale uma sessão de cinema completinha, com pipoca e doces, para o filme que VOCÊ escolher.", valid: "Até o próximo grande lançamento." },
-            { id: 'lanche', icone: 'fa-burger', title: "Vale Lanche Gordinho", desc: "Bateu a fome? Este vale garante o seu lanche ou doce favorito pago pelo seu amor!", valid: "Para o dia em que a preguiça bater." },
-            { id: 'beijo', icone: 'fa-face-kiss-wink-heart', title: "Vale Beijos Infinitos", desc: "Apresente este vale a qualquer momento para receber uma sessão de beijos ilimitados.", valid: "Validade: Eterna (uso infinito)!" },
-            { id: 'juntinhos', icone: 'fa-people-arrows', title: "Vale Um Dia Juntinhos", desc: "Vale um dia inteirinho só nosso, jogados na cama ou no sofá, sem olhar o celular.", valid: "Para a próxima folga." },
-            { id: 'massagem', icone: 'fa-spa', title: "Vale Massagem", desc: "Vale uma massagem relaxante nas costas e nos pés depois daquele dia muito cansativo.", valid: "Sempre que a coluna doer." },
-            { id: 'razao', icone: 'fa-scale-balanced', title: "Vale 'Você Tem Razão'", desc: "Pode ser ativado no meio de qualquer pequena discussão boba para você ter a razão automaticamente.", valid: "Uso único (use com sabedoria!)." }
-        ];
-
-        function carregarVales() {
-            const grid = document.getElementById("valesGrid");
-            if (grid.children.length > 0) return; // já carregou
-            
-            valesData.forEach(vale => {
-                const btn = document.createElement("button");
-                btn.className = "w-full text-left bg-white/70 backdrop-blur-md border border-rose-300 rounded-2xl p-4 flex items-center gap-4 transition-all hover:bg-rose-100 hover:scale-105 shadow-sm";
-                btn.innerHTML = `
-                    <div class="w-12 h-12 flex-shrink-0 bg-gradient-to-br from-rose-400 to-pink-500 rounded-full flex items-center justify-center text-white text-xl shadow-inner">
-                        <i class="fa-solid ${vale.icone}"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-rose-900 font-bold text-sm sm:text-base">${vale.title}</h3>
-                        <p class="text-[10px] sm:text-xs text-rose-700/80">Toque para baixar o cupom 💌</p>
-                    </div>
-                    <div class="ml-auto text-rose-400"><i class="fa-solid fa-download"></i></div>
-                `;
-                btn.onclick = () => baixarVale(vale);
-                grid.appendChild(btn);
-            });
-        }
-
-        function baixarVale(vale) {
-            showToast("Gerando seu PDF com muito amor... 💌");
-            
-            // Preenche o template escondido
-            document.getElementById("pdfValeTitle").innerText = vale.title;
-            document.getElementById("pdfValeDesc").innerText = vale.desc;
-            document.getElementById("pdfValeValid").innerText = "Validade: " + vale.valid;
-
-            // Elemento HTML alvo
-            const element = document.getElementById('pdfValeArte');
-
-            // Configurações do html2pdf
-            const opt = {
-                margin:       0,
-                filename:     `Vale_Amor_${vale.id}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, logging: false },
-                jsPDF:        { unit: 'px', format: [800, 450], orientation: 'landscape' }
-            };
-
-            // Gera e baixa
-            html2pdf().set(opt).from(element).save().then(() => {
-                setTimeout(() => showToast("Cupom baixado com sucesso! 🎉"), 1000);
-            }).catch(err => {
-                console.error("Erro ao gerar PDF:", err);
-                showToast("Erro ao gerar o cupom. Tente novamente.");
-            });
-        }
-
-        // 💖 2. CONTADOR (11 de janeiro de 2026)
-        function updateCounter() {
-            const startDate = new Date(2026, 0, 11);
-            const now = new Date();
-            let diff = now - startDate;
-            if (diff < 0) {
-                document.getElementById("timeTogether").innerHTML = "Aguardando o nosso dia... 💖";
-                return;
-            }
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24)); diff -= days * (1000 * 60 * 60 * 24);
-            const hours = Math.floor(diff / (1000 * 60 * 60)); diff -= hours * (1000 * 60 * 60);
-            const minutes = Math.floor(diff / (1000 * 60)); diff -= minutes * (1000 * 60);
-            const seconds = Math.floor(diff / 1000);
-            const el = document.getElementById("timeTogether");
-            if (el) el.innerHTML = `${days} dias, ${hours}h, ${minutes}m, ${seconds}s 💖`;
-        }
-        setInterval(updateCounter, 1000); updateCounter();
-
-        // 💖 FALLING HEARTS
-        function createHeartParticle() {
-            const heart = document.createElement("div"); heart.className = "heart-particle";
-            const icons = ["💖", "💗", "💕", "🌸", "✨", "❤️"];
-            heart.innerHTML = icons[Math.floor(Math.random() * icons.length)];
-            heart.style.left = Math.random() * 100 + "vw"; heart.style.fontSize = (Math.random() * 14 + 14) + "px";
-            const duration = Math.random() * 3 + 4; heart.style.animationDuration = duration + "s";
-            document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), duration * 1000);
-        }
-        setInterval(createHeartParticle, 700);
-
-        // 🧠 NOSSAS PERGUNTAS DO QUIZ / BLOCK BLAST
-        const casalQuestions = [
-            {q:"Onde nós nos conhecemos?", a:[{t:"Instagram",c:true},{t:"Na escola",c:false},{t:"Em uma festa",c:false},{t:"Por amigos em comum",c:false}]},
-            {q:"Qual foi o primeiro passo que deu início à nossa conversa?", a:[{t:"Uma resposta a um story",c:true},{t:"Uma ligação",c:false},{t:"Um convite para sair",c:false}]},
-            {q:"Qual foi a data em que eu te pedi em namoro?", a:[{t:"11 de janeiro",c:true},{t:"11 de fevereiro",c:false},{t:"25 de outubro",c:false}]},
-            {q:"Antes de oficializarmos, eu já tinha conhecido sua família?", a:[{t:"Verdadeiro",c:true},{t:"Falso",c:false}]},
-            {q:"Qual foi uma das nossas primeiras grandes etapas presenciais?", a:[{t:"O primeiro encontro",c:true},{t:"Uma viagem juntos",c:false},{t:"Uma formatura",c:false}]},
-            {q:"Quais destas demonstrações de carinho eu já planejei pra você?", a:[{t:"Flores, caixas e bilhetinhos",c:true},{t:"Apenas um troféu",c:false}]},
-            {q:"Nós começamos a namorar antes de nos conhecermos pessoalmente?", a:[{t:"Falso",c:true},{t:"Verdadeiro",c:false}]},
-            {q:"Como eu costumo te chamar carinhosamente?", a:[{t:"Minha princesa",c:true},{t:"Minha parceira",c:false},{t:"Minha estrela",c:false}]},
-            {q:"Quais são as figuras religiosas que eu costumo mencionar nas nossas mensagens?", a:[{t:"Jesus e Maria",c:true},{t:"Somente São José",c:false},{t:"Santo Antônio",c:false}]},
-            {q:"Eu já planejei presentes personalizados com fotos e mensagens pra gente?", a:[{t:"Verdadeiro",c:true},{t:"Falso",c:false}]},
-            {q:"PERGUNTA BÔNUS: Qual foi o momento em que você percebeu que estava apaixonada?", a:[{t:"Eu me apaixono todos os dias!",c:true}]}
-        ];
-        const shuf = a => [...a].sort(() => Math.random() - 0.5);
-
-        // 🎮 QUIZ LÓGICA
-        let kisses = 0, qIndex = 0;
-        function resetQuiz() {
-            kisses = 0; qIndex = 0;
-            document.getElementById("kissCount").textContent = "0";
-            showQ();
-        }
-        function showQ() {
-            const qData = casalQuestions[qIndex];
-            document.getElementById("question").textContent = qData.q;
-            const answersContainer = document.getElementById("answers"); answersContainer.innerHTML = "";
-            document.getElementById("result").textContent = ""; document.getElementById("kissBtn").classList.add("hidden");
-            
-            shuf(qData.a).forEach(opt => {
-                const btn = document.createElement("button");
-                btn.className = "w-full py-3 px-4 rounded-xl bg-white border border-rose-200 text-rose-900 font-medium text-sm hover:bg-rose-500 hover:text-white transition-all shadow-sm";
-                btn.textContent = opt.t; btn.onclick = () => checkQ(opt.c);
-                answersContainer.appendChild(btn);
-            });
-        }
-        function checkQ(isCorrect) {
-            const resultEl = document.getElementById("result"); const answersContainer = document.getElementById("answers");
-            if (isCorrect) {
-                resultEl.className = "text-emerald-600 font-bold text-base min-h-[24px]"; resultEl.textContent = "Acertou! 💕";
-                answersContainer.innerHTML = ""; setTimeout(nextQuestion, 1000);
-            } else {
-                kisses++; document.getElementById("kissCount").textContent = kisses;
-                resultEl.className = "text-rose-600 font-bold text-base min-h-[24px]"; resultEl.textContent = "Errou! 😘 Deve um beijo!";
-                document.getElementById("kissBtn").classList.remove("hidden"); answersContainer.innerHTML = "";
-            }
-        }
-        function nextQuestion() {
-            qIndex++;
-            if (qIndex < casalQuestions.length) { showQ(); }
-            else {
-                document.getElementById("question").textContent = "Fim do quiz 💖";
-                document.getElementById("answers").innerHTML = ""; document.getElementById("kissBtn").classList.add("hidden");
-                const resultEl = document.getElementById("result");
-                resultEl.className = "text-rose-900 font-bold text-lg min-h-[24px]"; resultEl.textContent = `Você me deve ${kisses} beijos hoje! 😏`;
-            }
-        }
-
-        // 📖 LIVRO DE MEMÓRIAS
-        let bookIndex = 0;
-        const bookPages = [
-            "02.jpeg", "03.jpeg", "03.mp4", "04.jpeg", "04.mp4", 
-            "05.jpeg", "05.mp4", "06.jpeg", "07.mp4", "08.jpeg", 
-            "11.jpg", "12.jpg", "13.jpg",
-            "WhatsApp Image 2026-11-13 at 10.47.23 (1).jpeg", "WhatsApp Image 2026-11-13 at 10.47.23 (2).jpeg",
-            "WhatsApp Image 2026-11-13 at 10.47.23.jpeg", "WhatsApp Image 2026-11-13 at 10.47.24 (2).jpeg",
-            "WhatsApp Image 2026-11-13 at 10.47.24 (3).jpeg", "WhatsApp Image 2026-11-13 at 10.47.24.jpeg",
-            "WhatsApp Image 2026-11-13 at 10.47.25 (1).jpeg", "WhatsApp Image 2026-11-13 at 10.47.25 (2).jpeg",
-            "WhatsApp Image 2026-11-13 at 10.47.25.jpeg"
-        ];
-        function renderBook() {
-            const container = document.getElementById("mediaContainer"); container.innerHTML = "";
-            const file = bookPages[bookIndex];
-            document.getElementById("pageIndicator").textContent = (bookIndex + 1) + " / " + bookPages.length;
-            if (file.endsWith(".mp4")) {
-                const v = document.createElement("video"); v.src = encodeURI(file); v.controls = true; v.autoplay = true; v.muted = true; v.loop = true;
-                v.className = "w-full h-full object-cover rounded-xl"; container.appendChild(v);
-            } else {
-                const img = document.createElement("img"); img.src = encodeURI(file); img.className = "w-full h-full object-cover rounded-xl";
-                img.onerror = () => { container.innerHTML = `<div class="text-rose-500 font-medium italic p-4 text-center">Adicione a foto ${file} na pasta!</div>`; };
-                container.appendChild(img);
-            }
-        }
-        function nextPage() { if (bookIndex < bookPages.length - 1) { bookIndex++; renderBook(); } }
-        function prevPage() { if (bookIndex > 0) { bookIndex--; renderBook(); } }
-        
-        let touchStartX = 0;
-        document.getElementById("bookContainer").addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX, {passive: true});
-        document.getElementById("bookContainer").addEventListener('touchend', e => { 
-            let touchEndX = e.changedTouches[0].screenX; 
-            if (touchStartX - touchEndX > 50) nextPage(); 
-            if (touchEndX - touchStartX > 50) prevPage(); 
-        });
-        renderBook();
-
-        // 🃏 JOGO DA MEMÓRIA
-        const memImages = [
-            "01.jpeg", "08.jpeg", "10.jpg", "WhatsApp Image 2026-11-13 at 10.47.23 (1).jpeg",
-            "WhatsApp Image 2026-11-13 at 10.47.24 (3).jpeg", "WhatsApp Image 2026-11-13 at 10.47.24.jpg",
-            "WhatsApp Image 2026-11-13 at 10.47.25 (1).jpeg", "WhatsApp Image 2026-11-13 at 10.47.25.jpeg"
-        ];
-        let memCards = [], flippedCards = [], matchedPairs = 0, memMoves = 0;
-        
-        function initMemoryGame() {
-            const grid = document.getElementById("memoryGrid"); grid.innerHTML = "";
-            memCards = []; flippedCards = []; matchedPairs = 0; memMoves = 0;
-            document.getElementById("memMoves").textContent = memMoves;
-            let items = [...memImages, ...memImages].sort(() => Math.random() - 0.5);
-            
-            items.forEach(imgSrc => {
-                const card = document.createElement("div"); card.className = "perspective-1000 w-full aspect-square cursor-pointer";
-                card.dataset.val = imgSrc;
-                
-                card.innerHTML = `
-                    <div class="card-inner">
-                        <div class="card-front">💖</div>
-                        <div class="card-back"><img src="${encodeURI(imgSrc)}" class="w-full h-full object-cover" onerror="this.style.display='none'"></div>
-                    </div>
-                `;
-                
-                card.onclick = () => flipMemCard(card); grid.appendChild(card); memCards.push(card);
-            });
-        }
-        
-        function flipMemCard(card) {
-            const inner = card.querySelector(".card-inner");
-            if (flippedCards.length < 2 && !inner.classList.contains("flipped") && !flippedCards.includes(card)) {
-                inner.classList.add("flipped"); flippedCards.push(card);
-                if (flippedCards.length === 2) { memMoves++; document.getElementById("memMoves").textContent = memMoves; setTimeout(checkMemMatch, 800); }
-            }
-        }
-        
-        function checkMemMatch() {
-            const [c1, c2] = flippedCards;
-            if (c1.dataset.val === c2.dataset.val) {
-                matchedPairs++; 
-                if (matchedPairs === memImages.length) setTimeout(() => alert("Você encontrou todos os pares, mas o meu par perfeito sempre foi você! 💖"), 300);
-            } else {
-                c1.querySelector(".card-inner").classList.remove("flipped");
-                c2.querySelector(".card-inner").classList.remove("flipped");
-            }
-            flippedCards = [];
-        }
-
-        // 🌌 ABRA QUANDO
-        const envData = {
-            love: { img: "01.jpeg", title: "duvidar do meu amor", text: "Marília, minha princesa, se você está lendo isso, por favor, tire qualquer dúvida dessa sua cabecinha linda. Desde que você respondeu aquele story no Instagram, minha vida mudou. Eu te escolhi no dia 11 de janeiro e continuo te escolhendo todos os dias. Você é a mulher que eu pedi a Jesus e Maria. Nunca duvide que eu sou louco por você!" },
-            sad: { img: "02.jpeg", title: "estiver triste", text: "Meu amor, o que aconteceu para tirar esse sorriso lindo do seu rosto? Queria muito estar aí para te dar um abraço bem apertado. Lembra que você é forte, maravilhosa e que eu estou aqui para segurar a sua mão em todos os momentos, bons e ruins. Não fica triste, eu te amo mais do que tudo e Jesus está cuidando de você." },
-            miss: { img: "11.jpg", title: "sentir saudade", text: "Minha princesa, eu também estou morrendo de saudade! Contando os segundos para a gente se ver, para te abraçar e sentir seu cheiro. Lembra do nosso primeiro encontro? É essa mesma magia que eu sinto toda vez que estou com você. Fica com o coração tranquilo, logo estaremos juntinhos de novo. Te amo demais!" },
-            bad_day: { img: "12.jpg", title: "o dia for ruim", text: "Poxa vida, meu bem... dias ruins infelizmente acontecem, mas eles não definem o nosso amor. Deixa eu cuidar de você hoje. Queria ter te levado flores de cetim e uma caixinha de fotos só pra alegrar seu dia. Respira fundo, amanhã é um novo dia e o meu amor por você só cresce!" },
-            sleep: { img: "13.jpg", title: "perder o sono", text: "Sem sono, minha rainha? Aposto que a cabecinha tá pensando em mil coisas. Pensa nos nossos momentos e em tudo que ainda vamos viver juntos. Feche os olhos, respire fundo e sinta meu abraço espiritual te protegendo. Jesus, Maria e São José estão zelando pelo seu descanso. Dorme bem, te amo!" },
-            smile: { img: "10.jpg", title: "quiser sorrir", text: "Ah, se você quer sorrir, é só lembrar do quanto eu sou apaixonado por você! Marília, você é a luz dos meus dias. Escrevi todas aquelas cartinhas e fiz tudo isso só para ver esse seu sorriso de novo. Você é o amor da minha vida, minha princesa. Sorria sempre!" },
-            future: { img: "WhatsApp Image 2026-11-13 at 10.47.23.jpeg", title: "pensar no futuro", text: "Minha parceira para a vida toda! Toda vez que eu penso no futuro, eu vejo você. Eu imagino as nossas conquistas, nossa casa, a nossa família que vamos construir sob a benção de Jesus e Maria. Cada passo que dou hoje é para que o nosso amanhã seja ainda mais perfeito. Você é o meu melhor plano!" },
-            insecure: { img: "WhatsApp Image 2026-11-13 at 10.47.24 (2).jpeg", title: "se sentir insegura", text: "Ei, minha rainha, por que essa insegurança? Olha no espelho e vê o que eu vejo todos os dias: a mulher mais linda, forte, dedicada e maravilhosa desse mundo. Eu me apaixonei por cada detalhe seu, pelo seu sorriso, pela sua voz, pelo seu coração. Você é mais do que o suficiente, você é tudo pra mim!" },
-            hug: { img: "WhatsApp Image 2026-11-13 at 10.47.25.jpeg", title: "precisar de um abraço", text: "Queria tanto poder te abraçar fisicamente agora e não te soltar mais! Sinta meu abraço através dessa cartinha. Lembra do jeito que eu te envolvo nos meus braços? É ali que é o nosso lugar seguro. Estou com você, amor, em pensamento e coração, sempre. Te amo muito!" }
-        };
-
-        let activeOpenWhenId = null, openWhenTypewriterTimeout = null, isOpenWhenEnvelopeOpen = false;
-        function initUniverseStars() {
-            const container = document.getElementById("starsContainer");
-            if (container.children.length > 0) return;
-            for (let i = 0; i < 45; i++) {
-                const star = document.createElement("div"); star.className = "star";
-                const size = Math.random() * 3 + 1; star.style.width = size + "px"; star.style.height = size + "px";
-                star.style.top = Math.random() * 100 + "%"; star.style.left = Math.random() * 100 + "%";
-                star.style.setProperty("--duration", (Math.random() * 3 + 2) + "s"); container.appendChild(star);
-            }
-        }
-        function openWhenModal(id) {
-            activeOpenWhenId = id; isOpenWhenEnvelopeOpen = false; const data = envData[id];
-            document.getElementById("modalHeaderTitle").textContent = "Abra quando " + data.title;
-            
-            const m = document.getElementById("envMedia"); m.innerHTML = "";
-            const im = new Image(); im.src = encodeURI(data.img); im.className = "w-full h-full object-cover";
-            im.onerror = () => { m.innerHTML = '<div class="text-rose-500 font-bold">💌 Adicione a foto '+data.img+'</div>'; };
-            m.appendChild(im);
-
-            document.getElementById("openWhenTypewriter").textContent = "";
-            document.getElementById("openWhenCursor").style.display = "inline-block";
-            document.getElementById("openWhenEnvelope").classList.remove("open");
-            document.getElementById("openWhenModalOverlay").classList.remove("hidden");
-            setTimeout(triggerEnvelopeOpen, 400);
-        }
-        function triggerEnvelopeOpen() {
-            if (isOpenWhenEnvelopeOpen || !activeOpenWhenId) return;
-            isOpenWhenEnvelopeOpen = true;
-            document.getElementById("openWhenEnvelope").classList.add("open");
-            setTimeout(() => { startOpenWhenTypewriter(envData[activeOpenWhenId].text); }, 850);
-        }
-        function startOpenWhenTypewriter(fullText) {
-            const textEl = document.getElementById("openWhenTypewriter"), cursorEl = document.getElementById("openWhenCursor");
-            textEl.textContent = ""; cursorEl.style.display = "inline-block";
-            let i = 0; if (openWhenTypewriterTimeout) clearTimeout(openWhenTypewriterTimeout);
-            function typeChar() {
-                if (i < fullText.length) { textEl.textContent += fullText.charAt(i); i++; openWhenTypewriterTimeout = setTimeout(typeChar, 25); } 
-                else { cursorEl.style.display = "none"; }
-            }
-            typeChar();
-        }
-        function closeOpenWhenModal() {
-            if (openWhenTypewriterTimeout) clearTimeout(openWhenTypewriterTimeout);
-            document.getElementById("openWhenModalOverlay").classList.add("hidden");
-            activeOpenWhenId = null; isOpenWhenEnvelopeOpen = false;
-        }
-
-        // 🌧️ CHUVA DE AMOR
-        const milestones = {
-            10: { text: "10 pontos! Você pegou meu coração 💖", title: "Marco de 10 Pontos! 💌", reached: false },
-            25: { text: "25! Minha artilheira do amor 😍", title: "Marco de 25 Pontos! 💖", reached: false },
-            50: { text: "50 pontos! Te amo até o infinito ♾️", title: "Marco de 50 Pontos! 🌹", reached: false },
-            100: { text: "100! Você é a minha campeã 👑", title: "100 PONTOS! AMOR ETERNO! 💍", reached: false }
-        };
-        let canvas, ctx, catchAnimId, catchScore = 0, catchLives = 3, catchRunning = false, catchPaused = false;
-        let cPlayer = { x: 0, y: 0, w: 64, h: 40 }, heartsArr = [], lastHeartSpawn = 0;
-
-        function initCatcherCanvas() {
-            canvas = document.getElementById("catcherCanvas"); if (!canvas) return; ctx = canvas.getContext("2d");
-            const rect = canvas.parentElement.getBoundingClientRect(); canvas.width = rect.width; canvas.height = rect.height;
-            cPlayer.w = Math.min(68, canvas.width * 0.2); cPlayer.h = 42; cPlayer.x = canvas.width / 2 - cPlayer.w / 2; cPlayer.y = canvas.height - cPlayer.h - 15;
-            const handleMove = (e) => {
-                if (!catchRunning || catchPaused) return;
-                let cx = e.clientX; if (e.touches && e.touches[0]) cx = e.touches[0].clientX;
-                cPlayer.x = Math.max(0, Math.min(canvas.width - cPlayer.w, cx - canvas.getBoundingClientRect().left - cPlayer.w / 2));
-            };
-            canvas.addEventListener("mousemove", handleMove); canvas.addEventListener("touchmove", handleMove, { passive: true });
-        }
-        function startCatcherGame() {
-            document.getElementById("catcherStartOverlay").classList.add("hidden"); document.getElementById("catcherGameOverOverlay").classList.add("hidden"); document.getElementById("declarationModal").classList.add("hidden");
-            catchScore = 0; catchLives = 3; catchRunning = true; catchPaused = false; heartsArr = [];
-            Object.keys(milestones).forEach(k => milestones[k].reached = false);
-            updateCatchUI(); initCatcherCanvas();
-            if (catchAnimId) cancelAnimationFrame(catchAnimId); lastHeartSpawn = performance.now(); catchLoop(performance.now());
-        }
-        function updateCatchUI() { document.getElementById("catcherScore").textContent = catchScore; document.getElementById("catcherLives").textContent = "❤️".repeat(catchLives) || "💔"; }
-        function spawnCatchHeart() {
-            const r = Math.random(); let t = "🩷", p = 1, s = 2.2;
-            if (r > 0.85) { t = "⭐"; p = 5; s = 3.5; } else if (r > 0.65) { t = "💔"; p = 0; s = 3; }
-            heartsArr.push({ x: Math.random() * (canvas.width - 30) + 15, y: -25, size: 26, speed: s + Math.random(), emoji: t, pts: p });
-        }
-        function catchLoop(timestamp) {
-            if (!catchRunning) return;
-            if (!catchPaused) {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                if (timestamp - lastHeartSpawn > 750) { spawnCatchHeart(); lastHeartSpawn = timestamp; }
-                
-                // Draw Envelope Player
-                ctx.fillStyle = "#ffffff"; ctx.fillRect(cPlayer.x, cPlayer.y, cPlayer.w, cPlayer.h);
-                ctx.font = "20px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("💌", cPlayer.x + cPlayer.w / 2, cPlayer.y + cPlayer.h / 2);
-
-                for (let i = heartsArr.length - 1; i >= 0; i--) {
-                    let h = heartsArr[i]; h.y += h.speed;
-                    ctx.font = `${h.size}px sans-serif`; ctx.fillText(h.emoji, h.x, h.y);
-                    if (h.y + h.size / 2 > cPlayer.y && h.y - h.size / 2 < cPlayer.y + cPlayer.h && h.x + h.size / 2 > cPlayer.x && h.x - h.size / 2 < cPlayer.x + cPlayer.w) {
-                        if (h.emoji === '💔') { catchLives--; updateCatchUI(); if (catchLives <= 0) endCatchGame(); } 
-                        else { catchScore += h.pts; updateCatchUI(); checkCatchMile(); }
-                        heartsArr.splice(i, 1); continue;
-                    }
-                    if (h.y > canvas.height + 30) heartsArr.splice(i, 1);
-                }
-            }
-            catchAnimId = requestAnimationFrame(catchLoop);
-        }
-        function checkCatchMile() {
-            Object.keys(milestones).forEach(pts => {
-                if (catchScore >= parseInt(pts) && !milestones[pts].reached) {
-                    milestones[pts].reached = true; catchPaused = true;
-                    document.getElementById("declarationTitle").textContent = milestones[pts].title;
-                    document.getElementById("declarationText").textContent = milestones[pts].text;
-                    document.getElementById("declarationModal").classList.remove("hidden");
-                }
-            });
-        }
-        function closeDeclarationModal() { document.getElementById("declarationModal").classList.add("hidden"); catchPaused = false; }
-        function endCatchGame() { catchRunning = false; document.getElementById("finalCatcherScore").textContent = catchScore; document.getElementById("catcherGameOverOverlay").classList.remove("hidden"); }
-
-        // 🧩 BLOCK BLAST
-        const BOARD_SIZE = 8;
-        let bbBoard = [], bbScoreNum = 0, bbTrayPieces = [null, null, null], bbDraggingIdx = null;
-        let bbTimerSeconds = 30, bbTimerInterval = null, bbGameActive = false;
-        
-        const SHAPES = [ { grid: [[1]] }, { grid: [[1, 1]] }, { grid: [[1], [1]] }, { grid: [[1, 1], [1, 1]] }, { grid: [[1, 1, 1]] }, { grid: [[1], [1], [1]] }, { grid: [[1, 0], [1, 1]] }, { grid: [[1, 1, 1], [0, 1, 0]] } ];
-
-        function initBlockBlastGame() {
-            bbBoard = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(0));
-            bbScoreNum = 0; bbTimerSeconds = 30; bbGameActive = true;
-            document.getElementById("bbScore").textContent = "0"; document.getElementById("bbTimer").textContent = "30s";
-            document.getElementById("blockBlastTriviaModal").classList.add("hidden");
-            renderBbBoard(); generateBbTray(); startBbTimer();
-        }
-        function startBbTimer() {
-            clearInterval(bbTimerInterval); bbGameActive = true;
-            bbTimerInterval = setInterval(() => {
-                if (!bbGameActive) return; bbTimerSeconds--;
-                document.getElementById("bbTimer").textContent = bbTimerSeconds + "s";
-                if (bbTimerSeconds <= 0) { clearInterval(bbTimerInterval); triggerBbTrivia(); }
-            }, 1000);
-        }
-        function renderBbBoard() {
-            const b = document.getElementById("blockBoard"); b.innerHTML = "";
-            for (let r = 0; r < BOARD_SIZE; r++) {
-                for (let c = 0; c < BOARD_SIZE; c++) {
-                    const cell = document.createElement("div"); cell.className = `block-cell bg-white/50 border border-pink-200/50 ${bbBoard[r][c] ? 'filled' : ''}`;
-                    cell.dataset.r = r; cell.dataset.c = c; b.appendChild(cell);
-                }
-            }
-        }
-        function generateBbTray() {
-            for (let i = 0; i < 3; i++) bbTrayPieces[i] = JSON.parse(JSON.stringify(SHAPES[Math.floor(Math.random() * SHAPES.length)].grid));
-            renderBbTray();
-        }
-
-        // ==========================================
-        // CÓDIGO CORRIGIDO DO ARRASTAR E SOLTAR
-        // ==========================================
-        function renderBbTray() {
-            const t = document.getElementById("blockTray"); t.innerHTML = "";
-            bbTrayPieces.forEach((grid, idx) => {
-                const slot = document.createElement("div"); 
-                slot.className = "flex items-center justify-center p-1 cursor-grab active:cursor-grabbing hover:bg-rose-100/40 rounded-xl transition-all h-[80px] touch-none"; 
-                slot.dataset.idx = idx;
-                
-                if (grid) {
-                    const c = document.createElement("div"); 
-                    c.className = "grid gap-1 pointer-events-none"; 
-                    c.style.gridTemplateRows = `repeat(${grid.length}, minmax(0, 1fr))`; 
-                    c.style.gridTemplateColumns = `repeat(${grid[0].length}, minmax(0, 1fr))`;
-                    
-                    grid.forEach(row => row.forEach(val => {
-                        const b = document.createElement("div"); 
-                        b.className = `w-5 h-5 rounded-md ${val ? 'bg-gradient-to-tr from-rose-500 to-pink-500 shadow-sm border border-white/60' : 'opacity-0'}`; 
-                        c.appendChild(b);
-                    }));
-                    slot.appendChild(c); attachBbDrag(slot, idx);
-                } else slot.classList.add("opacity-20", "pointer-events-none");
-                t.appendChild(slot);
-            });
-        }
-
-        function attachBbDrag(slot, idx) {
-            const start = (e) => {
-                if (!bbGameActive || !bbTrayPieces[idx]) return; 
-                bbDraggingIdx = idx;
-                const g = document.getElementById("dragGhost"); 
-                g.innerHTML = ""; g.style.display = "block";
-                const c = slot.children[0].cloneNode(true); 
-                c.querySelectorAll("div").forEach(d => { 
-                    if(d.classList.contains("w-5")){ 
-                        d.classList.replace("w-5","w-7"); 
-                        d.classList.replace("h-5","h-7"); 
-                    }
-                });
-                g.appendChild(c); 
-                moveBbDrag(e);
-            };
-            slot.addEventListener("pointerdown", start);
-        }
-
-        function moveBbDrag(e) {
-            if (bbDraggingIdx === null || !bbGameActive) return;
-            let cx = e.clientX, cy = e.clientY; 
-            if (e.touches && e.touches.length > 0) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; }
-            
-            const g = document.getElementById("dragGhost"); 
-            g.style.left = cx + "px"; 
-            g.style.top = (cy - 60) + "px"; 
-        }
-
-        function endBbDrag(e) {
-            if (bbDraggingIdx === null || !bbGameActive) return;
-            
-            const ghost = document.getElementById("dragGhost");
-            const grid = bbTrayPieces[bbDraggingIdx];
-            
-            const allBlocks = ghost.querySelectorAll("div > div");
-            let firstDOM = null, firstR = 0, firstC = 0, i = 0;
-            
-            outer: for(let r = 0; r < grid.length; r++) {
-                for(let c = 0; c < grid[0].length; c++) {
-                    if(grid[r][c]) { 
-                        firstDOM = allBlocks[i]; firstR = r; firstC = c; 
-                        break outer; 
-                    }
-                    i++;
-                }
-            }
-            
-            let target = null;
-            if (firstDOM) {
-                const rect = firstDOM.getBoundingClientRect();
-                const blockCenterX = rect.left + (rect.width / 2);
-                const blockCenterY = rect.top + (rect.height / 2);
-                
-                ghost.style.display = "none"; 
-                target = document.elementFromPoint(blockCenterX, blockCenterY);
-            } else {
-                ghost.style.display = "none";
-            }
-            
-            if (target && target.classList.contains("block-cell")) {
-                const hitR = parseInt(target.dataset.r);
-                const hitC = parseInt(target.dataset.c);
-                
-                const shapeTopLeftR = hitR - firstR;
-                const shapeTopLeftC = hitC - firstC;
-                
-                if (canPlaceBb(grid, shapeTopLeftR, shapeTopLeftC)) { 
-                    placeBb(grid, shapeTopLeftR, shapeTopLeftC); 
-                    bbTrayPieces[bbDraggingIdx] = null; 
-                    renderBbTray(); 
-                    checkBbLines(); 
-                    if (bbTrayPieces.every(p => p === null)) generateBbTray(); 
-                }
-            }
-            bbDraggingIdx = null;
-        }
-
-        window.addEventListener("pointermove", moveBbDrag); 
-        window.addEventListener("pointerup", endBbDrag); 
-        window.addEventListener("touchend", endBbDrag);
-        // ==========================================
-
-        function canPlaceBb(grid, sr, sc) {
-            for (let r = 0; r < grid.length; r++) for (let c = 0; c < grid[0].length; c++) {
-                if (grid[r][c] && (sr + r >= BOARD_SIZE || sr + r < 0 || sc + c >= BOARD_SIZE || sc + c < 0 || bbBoard[sr + r][sc + c] === 1)) return false;
-            }
-            return true;
-        }
-        function placeBb(grid, sr, sc) {
-            grid.forEach((row, r) => row.forEach((val, c) => { if (val) { bbBoard[sr + r][sc + c] = 1; bbScoreNum += 10; } }));
-            document.getElementById("bbScore").textContent = bbScoreNum; renderBbBoard();
-        }
-        function checkBbLines() {
-            let fR = [], fC = [];
-            for (let r = 0; r < BOARD_SIZE; r++) if (bbBoard[r].every(v => v === 1)) fR.push(r);
-            for (let c = 0; c < BOARD_SIZE; c++) { let full = true; for (let r = 0; r < BOARD_SIZE; r++) if (bbBoard[r][c] === 0) full = false; if (full) fC.push(c); }
-            if (fR.length || fC.length) {
-                bbScoreNum += (fR.length + fC.length) * 100; document.getElementById("bbScore").textContent = bbScoreNum;
-                fR.forEach(r => { for (let c = 0; c < BOARD_SIZE; c++) bbBoard[r][c] = 0; });
-                fC.forEach(c => { for (let r = 0; r < BOARD_SIZE; r++) bbBoard[r][c] = 0; });
-                setTimeout(renderBbBoard, 200); showToast("Amor Encaixado! 💖");
-            }
-        }
-        function triggerBbTrivia() {
-            bbGameActive = false;
-            const pool = casalQuestions.filter(x => x.a.length > 1); const qData = pool[Math.floor(Math.random() * pool.length)];
-            document.getElementById("bbTriviaQuestion").textContent = qData.q;
-            const aCont = document.getElementById("bbTriviaAnswers"); aCont.innerHTML = "";
-            shuf(qData.a).forEach(opt => {
-                const b = document.createElement("button"); b.className = "w-full py-2.5 px-4 rounded-xl bg-white border border-rose-200 text-rose-900 font-medium text-xs hover:bg-rose-500 hover:text-white transition-all shadow-sm";
-                b.textContent = opt.t; b.onclick = () => {
-                    document.getElementById("blockBlastTriviaModal").classList.add("hidden");
-                    if (opt.c) { bbScoreNum *= 2; document.getElementById("bbScore").textContent = bbScoreNum; showToast("PONTOS DOBRADOS! (x2) 🚀💖"); } 
-                    else showToast("Errou! Mas o jogo continua ❤️");
-                    bbTimerSeconds = 30; startBbTimer();
-                };
-                aCont.appendChild(b);
-            });
-            document.getElementById("blockBlastTriviaModal").classList.remove("hidden");
-        }
-
-        // Utils
-        function showToast(msg) {
-            const t = document.getElementById("floatingToast"); document.getElementById("toastMessage").textContent = msg;
-            t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 2500);
-        }
-        function stopAllGames() {
-            catchRunning = false; if (catchAnimId) cancelAnimationFrame(catchAnimId);
-            bbGameActive = false; clearInterval(bbTimerInterval);
-        }
-    </script>
+// PAUSAR JOGOS
+function stopGames(){cancelAnimationFrame(raf);clearInterval(spw);raf=null;clearInterval(tI);if(dg)cancelD();G=null;
+$('bsb').style.display='';$('cso').classList.remove('hidden');$('cst').textContent='Colete Nosso Amor';$('bq').classList.add('hidden');closeOW()}
+</script>
 </body>
 </html>
